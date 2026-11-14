@@ -1,0 +1,10 @@
+{
+  "name": "CALVENTO — Considered Objects",
+  "short_name": "CALVENTO",
+  "description": "A considered edit of fashion, accessories and objects for everyday living.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f1ea",
+  "theme_color": "#0b0b0a",
+  "icons": []
+}
