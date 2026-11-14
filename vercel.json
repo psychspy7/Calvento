@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/products/:slug",
+      "destination": "/products/:slug/index.html"
+    },
+    {
+      "source": "/products/:slug/",
+      "destination": "/products/:slug/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
