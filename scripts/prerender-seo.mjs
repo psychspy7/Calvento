@@ -48,6 +48,14 @@ function makePage(product) {
   html = html.replace(/<meta name="twitter:title" content="[^"]*"\s*\/>/, '<meta name="twitter:title" content="' + escapeHtml(name + ' | CALVENTO') + '" />');
   html = html.replace(/<meta name="twitter:description" content="[^"]*"\s*\/>/, '<meta name="twitter:description" content="' + escapeHtml(description) + '" />');
   html = html.replace(/<meta name="twitter:image" content="[^"]*"\s*\/>/, '<meta name="twitter:image" content="' + imageUrl + '" />');
+  const baseSchemaStart = html.indexOf('<script type="application/ld+json">');
+  if (baseSchemaStart >= 0) {
+    const jsonStart = baseSchemaStart + '<script type="application/ld+json">'.length;
+    const jsonEnd = html.indexOf('</script>', jsonStart);
+    const baseGraph = JSON.parse(html.slice(jsonStart, jsonEnd));
+    baseGraph['@graph'] = baseGraph['@graph'].filter(item => item['@type'] !== 'FAQPage');
+    html = html.slice(0, jsonStart) + JSON.stringify(baseGraph) + html.slice(jsonEnd);
+  }
   const schema = {'@context':'https://schema.org','@type':'Product','name':name,'description':description,'category':category,'image':[imageUrl],'brand':{'@type':'Brand','name':'CALVENTO'},'url':url};
   const schemaTag = '<script type="application/ld+json" id="calvento-static-product-schema">' + JSON.stringify(schema).replace(/</g,'\\u003c') + '</script>';
   html = html.replace('</head>', schemaTag + '\n</head>');
