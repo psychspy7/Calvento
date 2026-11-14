@@ -4,3 +4,5 @@ Disallow: /admin
 Disallow: /admin/
 
 # Add your permanent production-domain sitemap after the domain is finalized.
+
+Sitemap: https://calvento-fw26--5ylnt11d.preview.emergentagent.com/sitemap.xml
