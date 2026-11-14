@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import Admin from './Admin.jsx';
+import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
+const Admin = lazy(() => import('./Admin.jsx'));
 import {firebaseConfigured,db} from './firebase.js';
 import {collection,onSnapshot,query as firestoreQuery,where} from 'firebase/firestore';
 import {
@@ -44,7 +44,7 @@ function App(){
   const visible=useMemo(()=>products.filter(p=>p.status!=='draft'&&(category==='All'||p.category===category)&&(!query||p.name.toLowerCase().includes(query.toLowerCase())||p.category.toLowerCase().includes(query.toLowerCase()))),[products,category,query]);
   const count=cart.reduce((s,p)=>s+p.qty,0);
   const total=cart.reduce((s,p)=>s+p.price*p.qty,0);
-  if(window.location.pathname==='/admin') return <Admin />;
+  if(window.location.pathname==='/admin') return <Suspense fallback={<div className="admin-loading">CALVENTO / STORE ADMINISTRATION</div>}><Admin /></Suspense>;
   const openProduct=(p)=>{setSelectedProduct(p);setSelectedImage(0);setSelectedSize('');window.history.pushState({},'',window.location.pathname+'?product='+encodeURIComponent(p.id))};
   const closeProduct=()=>{setSelectedProduct(null);const url=new URL(window.location.href);url.searchParams.delete('product');window.history.replaceState({},'',url.pathname+url.search+url.hash)};
   useEffect(()=>{const syncProductFromUrl=()=>{const id=new URLSearchParams(window.location.search).get('product');setSelectedProduct(id?products.find(p=>String(p.id)===id)||null:null)};syncProductFromUrl();window.addEventListener('popstate',syncProductFromUrl);return()=>window.removeEventListener('popstate',syncProductFromUrl)},[products]);
@@ -72,7 +72,7 @@ function App(){
 
     <main>
       <section className="hero">
-        <div className="hero-image"><img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=2000&q=90" alt="Editorial portrait in sculptural black tailoring"/><div className="image-index">CAMPAIGN No. 01 <span>FW / 26</span></div></div>
+        <div className="hero-image"><img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=2000&q=90" alt="Editorial portrait in sculptural black tailoring" fetchPriority="high" decoding="async"/><div className="image-index">CAMPAIGN No. 01 <span>FW / 26</span></div></div>
         <div className="hero-copy">
           <div className="eyebrow"><span className="gold-dot"></span> CALVENTO / AUTUMN—WINTER 2026</div>
           <h1>Form<br/><em>& essence.</em></h1>
