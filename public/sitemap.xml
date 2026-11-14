@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://calvento-vs-projects-0c743cd3.vercel.app/</loc>
-    <lastmod>2026-11-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://calvento-vs-projects-0c743cd3.vercel.app/</loc><lastmod>2026-11-14</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://calvento-vs-projects-0c743cd3.vercel.app/privacy-policy</loc><lastmod>2026-11-14</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://calvento-vs-projects-0c743cd3.vercel.app/terms-and-conditions</loc><lastmod>2026-11-14</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://calvento-vs-projects-0c743cd3.vercel.app/shipping-returns</loc><lastmod>2026-11-14</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://calvento-vs-projects-0c743cd3.vercel.app/refund-cancellation</loc><lastmod>2026-11-14</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://calvento-vs-projects-0c743cd3.vercel.app/contact</loc><lastmod>2026-11-14</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
 </urlset>
