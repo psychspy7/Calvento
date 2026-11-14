@@ -24,3 +24,12 @@ Without Firebase env vars, the app uses browser localStorage preview data only. 
 ## Local development
 `npm install && npm run dev`
 `npm run build`
+
+## SEO foundation
+- India-focused English metadata, descriptive page title and meta description
+- Open Graph and X/Twitter sharing metadata
+- Organization, WebSite and Store structured data
+- Crawler directives, favicon and web app manifest
+- Admin route excluded from crawling via robots.txt
+
+Before production SEO submission, set the permanent domain and add it to Search Console. Then publish a sitemap with absolute canonical URLs, verify canonical/redirect behaviour, and connect Search Console analytics. A temporary preview URL is intentionally not used as the canonical domain.
