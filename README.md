@@ -29,7 +29,7 @@ Without Firebase env vars, the app uses browser localStorage preview data only. 
 - India-focused English metadata, descriptive page title and meta description
 - Open Graph and X/Twitter sharing metadata
 - Organization, WebSite and Store structured data
-- Crawler directives, favicon and web app manifest
+- Crawler directives, XML sitemap, favicon and web app manifest
 - Admin route excluded from crawling via robots.txt
 
-Before production SEO submission, set the permanent domain and add it to Search Console. Then publish a sitemap with absolute canonical URLs, verify canonical/redirect behaviour, and connect Search Console analytics. A temporary preview URL is intentionally not used as the canonical domain.
+The current canonical URL and sitemap point to the supplied preview hostname as a temporary showcase default. Before public launch, replace that hostname in `index.html`, `public/robots.txt` and `public/sitemap.xml` with the final verified custom domain, configure HTTPS and redirects, then verify ownership in Google Search Console and submit `/sitemap.xml`. Add real business contact details, shipping/returns policies and verified product information before enabling rich product results.
