@@ -1,39 +1,26 @@
-# CALVENTO — Luxury commerce storefront
+# CALVENTO — Luxury commerce
 
-Responsive editorial storefront and product-control interface built with React and Vite.
+React + Vite storefront with INR pricing and Firebase commerce foundations.
 
-## Run locally
-```bash
-npm install
-npm run dev
-```
+## Firebase setup
+1. Create a Firebase project and register a Web App in https://console.firebase.google.com/.
+2. Copy the Web App config into a root `.env` file using the keys in `.env.example`.
+3. Enable Email/Password in Firebase Authentication.
+4. Create a Cloud Firestore database and enable Firebase Storage.
+5. Deploy `firestore.rules` and `storage.rules` with Firebase CLI: `firebase deploy --only firestore:rules,storage`.
+6. Create an admin user and assign the boolean custom claim `admin: true` from a trusted Admin SDK environment. Never commit service-account credentials or expose them in browser code.
+7. Add the same VITE_FIREBASE variables to Vercel and redeploy.
 
-## Build
-```bash
-npm run build
-npm run preview
-```
+## Admin
+Visit `/admin`. Firebase mode supports email/password sign-in, live Firestore product updates, create/edit/delete, publish/unpublish, INR prices, stock, SKU, and image uploads to Firebase Storage. Rules require the custom admin claim for writes. Do not weaken the rules to bypass authorization.
 
-## Storefront
-- Responsive editorial homepage, collections and journal
-- Product category filters and live search
-- Wishlist and shopping bag interactions
-- Quantity controls and INR subtotal display
-- Newsletter UI (not yet connected to a mailing service)
+## Data model
+`products/{id}`: name, category, type, price (integer INR), description, image, sku, stock, status, createdAt, updatedAt.
 
-## Product administration
-Open `/admin` to manage the local catalogue:
-- Create, edit and delete products
-- Set categories, collection labels, SKUs, image URLs and descriptions
-- Set native INR prices and stock quantities
-- Publish or unpublish catalogue entries
-- Search and filter the catalogue
-- Inventory value and low-stock overview
+Order rules are only a starting point. Checkout, stock reservation, tax, shipping, order validation and payment processing are not implemented. Production orders must be created by trusted backend/Cloud Functions after server-side price and stock validation.
 
-## Current implementation boundary
-The admin catalogue currently persists in the browser's localStorage. This is a functional frontend management prototype, **not yet a shared production database**. Changes are visible in the same browser profile only. Connect the selected Supabase project and apply the database schema before using it as a live multi-user product system.
+Without Firebase env vars, the app uses browser localStorage preview data only. This is not shared between devices.
 
-Checkout is not connected to a payment provider. No customer orders or payments are currently processed. Add real product photography with appropriate usage rights, shipping/tax rules, customer policies and payment integration before launch.
-
-## Stack
-React 18 · Vite 6 · Lucide React · CSS
+## Local development
+`npm install && npm run dev`
+`npm run build`
