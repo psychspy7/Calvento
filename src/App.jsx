@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Admin from './Admin.jsx';
+import {firebaseConfigured,db} from './firebase.js';
+import {collection,onSnapshot} from 'firebase/firestore';
 import {
   ArrowDownRight, ArrowRight, ArrowUpRight, Search, Heart, ShoppingBag,
   Menu, X, Plus, Minus, Check, Instagram, MoveUpRight
@@ -20,8 +22,7 @@ const money = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR
 
 function App(){
   const [products,setProducts]=useState(()=>{try{return JSON.parse(localStorage.getItem('calvento_products'))||initialProducts.map(p=>({...p,price:p.price*83,sku:'CV-'+String(p.id).padStart(4,'0'),stock:12,status:'active'}))}catch{return initialProducts.map(p=>({...p,price:p.price*83,sku:'CV-'+String(p.id).padStart(4,'0'),stock:12,status:'active'}))}});
-  useEffect(()=>{localStorage.setItem('calvento_products',JSON.stringify(products))},[products]);
-  if(window.location.pathname==='/admin') return <Admin />;
+  useEffect(()=>{if(!firebaseConfigured){localStorage.setItem('calvento_products',JSON.stringify(products));return;}const unsub=onSnapshot(collection(db,'products'),snap=>setProducts(snap.docs.map(d=>({id:d.id,...d.data()}))),err=>console.error('CALVENTO catalogue:',err));return unsub},[]);
   const [category,setCategory]=useState('All');
   const [cart,setCart]=useState([]);
   const [saved,setSaved]=useState([]);
@@ -36,6 +37,7 @@ function App(){
   const visible=useMemo(()=>products.filter(p=>p.status!=='draft'&&(category==='All'||p.category===category)&&(!query||p.name.toLowerCase().includes(query.toLowerCase())||p.category.toLowerCase().includes(query.toLowerCase()))),[products,category,query]);
   const count=cart.reduce((s,p)=>s+p.qty,0);
   const total=cart.reduce((s,p)=>s+p.price*p.qty,0);
+  if(window.location.pathname==='/admin') return <Admin />;
   const flash=(msg)=>{setNotice(msg);window.clearTimeout(window.__calventoToast);window.__calventoToast=window.setTimeout(()=>setNotice(''),2400)};
   const add=(product)=>{if(product.stock!==undefined&&product.stock<=0){flash('This piece is currently out of stock');return;}setCart(old=>{const found=old.find(p=>p.id===product.id);return found?old.map(p=>p.id===product.id?{...p,qty:p.qty+1}:p):[...old,{...product,qty:1}]});flash('Added to your bag');};
   const updateQty=(id,delta)=>setCart(old=>old.map(p=>p.id===id?{...p,qty:p.qty+delta}:p).filter(p=>p.qty>0));
