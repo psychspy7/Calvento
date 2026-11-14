@@ -1,6 +1,6 @@
-# CALVENTO — Storefront
+# CALVENTO — Luxury commerce storefront
 
-A responsive editorial luxury-commerce storefront built with React and Vite.
+Responsive editorial storefront and product-control interface built with React and Vite.
 
 ## Run locally
 ```bash
@@ -14,16 +14,26 @@ npm run build
 npm run preview
 ```
 
-## Current frontend capabilities
-- Responsive editorial homepage and collection sections
-- Category filtering and live product search
-- Wishlist toggles
-- Shopping bag with quantity controls and subtotal
-- Newsletter interaction
-- Mobile navigation, search overlay, cart drawer and toast feedback
+## Storefront
+- Responsive editorial homepage, collections and journal
+- Product category filters and live search
+- Wishlist and shopping bag interactions
+- Quantity controls and INR subtotal display
+- Newsletter UI (not yet connected to a mailing service)
 
-## Important production notes
-This is a frontend prototype. Product data is currently local, displayed prices use an illustrative USD-to-INR conversion, and checkout/newsletter submission are not connected to a backend. Before accepting orders, connect a commerce backend, real INR pricing, inventory, shipping, tax, authentication, privacy/terms pages and a payment provider. Replace demo imagery with licensed brand photography.
+## Product administration
+Open `/admin` to manage the local catalogue:
+- Create, edit and delete products
+- Set categories, collection labels, SKUs, image URLs and descriptions
+- Set native INR prices and stock quantities
+- Publish or unpublish catalogue entries
+- Search and filter the catalogue
+- Inventory value and low-stock overview
+
+## Current implementation boundary
+The admin catalogue currently persists in the browser's localStorage. This is a functional frontend management prototype, **not yet a shared production database**. Changes are visible in the same browser profile only. Connect the selected Supabase project and apply the database schema before using it as a live multi-user product system.
+
+Checkout is not connected to a payment provider. No customer orders or payments are currently processed. Add real product photography with appropriate usage rights, shipping/tax rules, customer policies and payment integration before launch.
 
 ## Stack
 React 18 · Vite 6 · Lucide React · CSS
