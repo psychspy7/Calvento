@@ -112,12 +112,12 @@ const legalPages = [
 function makeLegalPage(page) {
   const url = origin + '/' + page.slug;
   let html = template;
-  html = html.replace(/<title>[^<]*<\/title>/, '<title>' + escapeHtml(page.title) + ' | CALVENTO</title>');
-  html = html.replace(/<link rel="canonical" href="[^"]*"\s*\/>/, '<link rel="canonical" href="' + url + '" />');
-  html = html.replace(/<meta name="description" content="[^"]*"\s*\/>/, '<meta name="description" content="' + escapeHtml(page.description) + '" />');
-  html = html.replace(/<meta property="og:url" content="[^"]*"\s*\/>/, '<meta property="og:url" content="' + url + '" />');
-  html = html.replace(/<meta property="og:title" content="[^"]*"\s*\/>/, '<meta property="og:title" content="' + escapeHtml(page.title + ' | CALVENTO') + '" />');
-  html = html.replace(/<meta property="og:description" content="[^"]*"\s*\/>/, '<meta property="og:description" content="' + escapeHtml(page.description) + '" />');
+  html = html.replace('<title>CALVENTO — Premium Fashion, Accessories & Objects</title>', '<title>' + escapeHtml(page.title) + ' | CALVENTO</title>');
+  html = html.replace('<link rel="canonical" href="https://calvento.thekittycorp.com/" />', '<link rel="canonical" href="' + url + '" />');
+  html = html.replace('<meta name="description" content="Explore CALVENTO, a contemporary fashion and lifestyle brand from India. Discover considered apparel, modern tailoring, eveningwear, accessories, home objects and personal essentials." />', '<meta name="description" content="' + escapeHtml(page.description) + '" />');
+  html = html.replace('<meta property="og:url" content="https://calvento.thekittycorp.com/" />', '<meta property="og:url" content="' + url + '" />');
+  html = html.replace('<meta property="og:title" content="CALVENTO — Premium Fashion, Accessories & Living" />', '<meta property="og:title" content="' + escapeHtml(page.title + ' | CALVENTO') + '" />');
+  html = html.replace('<meta property="og:description" content="Discover contemporary fashion, modern tailoring, eveningwear, accessories and considered living objects from CALVENTO, a contemporary fashion and lifestyle brand." />', '<meta property="og:description" content="' + escapeHtml(page.description) + '" />');
   const schemaStart = html.indexOf('<script type="application/ld+json">');
   if (schemaStart >= 0) {
     const jsonStart = schemaStart + '<script type="application/ld+json">'.length;
@@ -127,9 +127,11 @@ function makeLegalPage(page) {
     baseGraph['@graph'].push({'@type':'WebPage','name':page.title + ' | CALVENTO','description':page.description,'url':url,'inLanguage':'en-IN'});
     html = html.slice(0, jsonStart) + JSON.stringify(baseGraph) + html.slice(jsonEnd);
   }
-  const sections = page.sections.map(([heading,body],i)=>'<section><h2>' + escapeHtml(heading) + '</h2><p>' + escapeHtml(body) + '</p></section>').join('');
+  const sections = page.sections.map(([heading,body])=>'<section><h2>' + escapeHtml(heading) + '</h2><p>' + escapeHtml(body) + '</p></section>').join('');
   const body = '<main class="seo-static"><header><a href="/">CALVENTO®</a><span class="eyebrow">A KITTY CORP ENTERPRISE</span></header><p class="eyebrow">CALVENTO / CUSTOMER INFORMATION</p><h1>' + escapeHtml(page.title) + '</h1><p>' + escapeHtml(page.intro) + '</p>' + sections + '<footer>CALVENTO · <a href="mailto:support@thekittycorp.com">support@thekittycorp.com</a> · <a href="/">Return to the CALVENTO house</a></footer></main>';
-  html = html.replace(/<div id="root">[\s\S]*?<\/div>/, '<div id="root">' + staticPageStyle + body + '</div>');
+  const rootStart = html.indexOf('<div id="root">');
+  const rootEnd = html.indexOf('</div>', rootStart) + 6;
+  html = html.slice(0, rootStart) + '<div id="root">' + staticPageStyle + body + '</div>' + html.slice(rootEnd);
   return html;
 }
 
