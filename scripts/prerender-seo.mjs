@@ -129,7 +129,7 @@ function makeLegalPage(page) {
   }
   const sections = page.sections.map(([heading,body],i)=>'<section><h2>' + escapeHtml(heading) + '</h2><p>' + escapeHtml(body) + '</p></section>').join('');
   const body = '<main class="seo-static"><header><a href="/">CALVENTO®</a><span class="eyebrow">A KITTY CORP ENTERPRISE</span></header><p class="eyebrow">CALVENTO / CUSTOMER INFORMATION</p><h1>' + escapeHtml(page.title) + '</h1><p>' + escapeHtml(page.intro) + '</p>' + sections + '<footer>CALVENTO · <a href="mailto:support@thekittycorp.com">support@thekittycorp.com</a> · <a href="/">Return to the CALVENTO house</a></footer></main>';
-  html = html.replace(/<div id="root">[\\s\\S]*?<\\/div>/, '<div id="root">' + staticPageStyle + body + '</div>');
+  html = html.replace(/<div id="root">[\s\S]*?<\/div>/, '<div id="root">' + staticPageStyle + body + '</div>');
   return html;
 }
 
