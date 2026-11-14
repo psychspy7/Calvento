@@ -1,4 +1,41 @@
 User-agent: *
 Allow: /
+Disallow: /authabcd
+Disallow: /admin
+
+User-agent: Googlebot
+Allow: /
+Disallow: /authabcd
+Disallow: /admin
+
+User-agent: Bingbot
+Allow: /
+Disallow: /authabcd
+Disallow: /admin
+
+User-agent: GPTBot
+Allow: /
+Disallow: /authabcd
+Disallow: /admin
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /authabcd
+Disallow: /admin
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /authabcd
+Disallow: /admin
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /authabcd
+Disallow: /admin
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /authabcd
+Disallow: /admin
 
 Sitemap: https://calvento.thekittycorp.com/sitemap.xml
