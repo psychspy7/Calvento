@@ -101,7 +101,7 @@ function App(){
           <div className="product-meta"><span>{p.category.toUpperCase()}</span><span>{money(p.price)}</span></div><h3><a className="product-title-link" href={'/products/'+slugify(p.name)} onClick={e=>{e.preventDefault();e.stopPropagation();openProduct(p)}}>{p.name}</a></h3><p>{p.description}</p><button className="view-details" onClick={e=>{e.stopPropagation();openProduct(p)}}>VIEW DETAILS <ArrowUpRight size={12}/></button>
         </article>)}</div>
         {visible.length===0&&<div className="empty-state">No pieces found. Try another search.</div>}
-        <div className="collection-bottom"><span>THE CALVENTO EDIT — 08 PIECES</span><button onClick={()=>{setCategory('All');setQuery('')}}>VIEW THE FULL EDIT <ArrowUpRight size={14}/></button></div>
+        <div className="collection-bottom"><span>THE CALVENTO EDIT — {visible.length.toString().padStart(2,'0')} PIECES</span><button onClick={()=>{setCategory('All');setQuery('')}}>VIEW THE FULL EDIT <ArrowUpRight size={14}/></button></div>
       </section>
 
       <section className="feature-story">
