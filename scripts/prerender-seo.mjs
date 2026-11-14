@@ -114,10 +114,10 @@ function makeLegalPage(page) {
   let html = template;
   html = html.replace(/<title>[^<]*<\/title>/, '<title>' + escapeHtml(page.title) + ' | CALVENTO</title>');
   html = html.replace(/<link rel="canonical" href="[^"]*"\\s*\\/>/, '<link rel="canonical" href="' + url + '" />');
-  html = html.replace(/<meta name="description" content="[^"]*"\\s*\\/>/, '<meta name="description" content="' + escapeHtml(page.description) + '" />');
+  html = html.replace(/<meta name="description" content="[^"]*"\s*\/>/, '<meta name="description" content="' + escapeHtml(page.description) + '" />');
   html = html.replace(/<meta property="og:url" content="[^"]*"\\s*\\/>/, '<meta property="og:url" content="' + url + '" />');
-  html = html.replace(/<meta property="og:title" content="[^"]*"\\s*\\/>/, '<meta property="og:title" content="' + escapeHtml(page.title + ' | CALVENTO') + '" />');
-  html = html.replace(/<meta property="og:description" content="[^"]*"\\s*\\/>/, '<meta property="og:description" content="' + escapeHtml(page.description) + '" />');
+  html = html.replace(/<meta property="og:title" content="[^"]*"\s*\/>/, '<meta property="og:title" content="' + escapeHtml(page.title + ' | CALVENTO') + '" />');
+  html = html.replace(/<meta property="og:description" content="[^"]*"\s*\/>/, '<meta property="og:description" content="' + escapeHtml(page.description) + '" />');
   const schemaStart = html.indexOf('<script type="application/ld+json">');
   if (schemaStart >= 0) {
     const jsonStart = schemaStart + '<script type="application/ld+json">'.length;
