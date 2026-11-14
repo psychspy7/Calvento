@@ -1,8 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /admin/
-Disallow: /authabcd
-Disallow: /authabcd/
 
 Sitemap: https://calvento-vs-projects-0c743cd3.vercel.app/sitemap.xml
