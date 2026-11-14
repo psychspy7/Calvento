@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://calvento-vs-projects-0c743cd3.vercel.app/sitemap.xml
+Sitemap: https://calvento.thekittycorp.com/sitemap.xml
