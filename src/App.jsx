@@ -5,6 +5,7 @@ import {
   ArrowDownRight, ArrowRight, ArrowUpRight, Search, Heart, ShoppingBag,
   Menu, X, Plus, Minus, Check, Instagram, MoveUpRight
 } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 const initialProducts = [
   {id:1,name:'Sovereign Wool Overcoat',category:'Apparel',type:'THE STANDARD',price:31540,description:'Double-faced wool · relaxed tailored fit',image:'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=1100&q=90',images:['https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=1200&q=90','https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=1200&q=90'],specs:[['Material','Wool blend'],['Fit','Relaxed tailored'],['Care','Professional dry clean'],['Origin','Designed for the CALVENTO edit']],sizes:['S','M','L','XL'],tone:'stone'},
@@ -120,6 +121,7 @@ function App(){
 
     {cartOpen&&<div className="overlay cart-overlay" onClick={()=>setCartOpen(false)}><aside className="cart-drawer" onClick={e=>e.stopPropagation()}><div className="cart-head"><div><span>YOUR SELECTION</span><h2>The bag <em>({count})</em></h2></div><button className="icon-btn" onClick={()=>setCartOpen(false)}><X/></button></div>{cart.length===0?<div className="cart-empty"><ShoppingBag size={28}/><h3>Your bag is waiting.</h3><p>Discover pieces made to be kept.</p><button className="gold-button" onClick={()=>{setCartOpen(false);jump('collection')}}>EXPLORE THE EDIT <ArrowUpRight size={14}/></button></div>:<><div className="cart-items">{cart.map(p=><div className="cart-item" key={p.cartKey||p.id}><img src={p.image} alt={p.name}/><div className="cart-item-info"><span>{p.category.toUpperCase()}</span><h3>{p.name}</h3>{p.selectedSize&&<small className="cart-size">SIZE / {p.selectedSize}</small>}<p>{money(p.price)}</p><div className="qty"><button onClick={()=>updateQty(p.cartKey||p.id,-1)}><Minus size={12}/></button><span>{p.qty}</span><button onClick={()=>updateQty(p.cartKey||p.id,1)}><Plus size={12}/></button></div></div><button className="remove-item" onClick={()=>updateQty(p.cartKey||p.id,-p.qty)}>REMOVE</button></div>)}</div><div className="cart-summary"><div><span>SUBTOTAL</span><strong>{money(total)}</strong></div><p>Shipping and taxes calculated at checkout.</p><button className="gold-button checkout" onClick={()=>flash('Checkout integration will be connected in the next phase')}>CONTINUE TO CHECKOUT <ArrowUpRight size={15}/></button><small>SECURE CHECKOUT · INDIA</small></div></>}</aside></div>}
     {notice&&<div className="toast"><Check size={15}/>{notice}</div>}
+    <Analytics />
   </div>
 }
 
