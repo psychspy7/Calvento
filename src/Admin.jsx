@@ -1,10 +1,11 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {ArrowLeft,Plus,Search,Edit3,Trash2,Eye,EyeOff,Package,Save,X,CheckCircle2,LogOut,Cloud,AlertCircle} from 'lucide-react';
 import './admin.css';
-import {firebaseConfigured,auth,db,storage} from './firebase.js';
-import {onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'firebase/auth';
-import {collection,addDoc,deleteDoc,doc,onSnapshot,updateDoc} from 'firebase/firestore';
-import {ref as storageRef,uploadBytes,getDownloadURL} from 'firebase/storage';
+import {firebaseConfigured,app} from './firebase.js';
+import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'firebase/auth';
+import {getFirestore,collection,addDoc,deleteDoc,doc,onSnapshot,updateDoc} from 'firebase/firestore';
+import {getStorage,ref as storageRef,uploadBytes,getDownloadURL} from 'firebase/storage';
+const auth=app?getAuth(app):null,db=app?getFirestore(app):null,storage=app?getStorage(app):null;
 const sample=[['Sovereign Wool Overcoat','Apparel',31540,12],['Milanese Cashmere Turtleneck','Apparel',19920,8],['Atelier Leather Tote','Accessories',21995,15],['Serein Sculptural Loafer','Accessories',18675,6],['Forma Ceramic Table Lamp','Living',15770,9],['No. 08 Eau de Parfum','Objects',12035,20],['Arc Stainless Timepiece','Accessories',26560,4],['Linen Weekend Shirt','Apparel',10375,18]];
 const seed=sample.map((x,i)=>({id:i+1,name:x[0],category:x[1],price:x[2],stock:x[3],type:'NEW ARRIVAL',description:'Considered design and premium materials.',image:'',sku:'CV-'+String(i+1).padStart(4,'0'),status:'active'}));
 const blank={name:'',category:'Apparel',type:'NEW ARRIVAL',price:'',description:'',image:'',sku:'',stock:0,status:'draft'};
