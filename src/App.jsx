@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Admin from './Admin.jsx';
 import {firebaseConfigured,db} from './firebase.js';
-import {collection,onSnapshot} from 'firebase/firestore';
+import {collection,onSnapshot,query,where} from 'firebase/firestore';
 import {
   ArrowDownRight, ArrowRight, ArrowUpRight, Search, Heart, ShoppingBag,
   Menu, X, Plus, Minus, Check, Instagram, MoveUpRight
@@ -22,7 +22,7 @@ const money = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR
 
 function App(){
   const [products,setProducts]=useState(()=>{try{return JSON.parse(localStorage.getItem('calvento_products'))||initialProducts.map(p=>({...p,price:p.price*83,sku:'CV-'+String(p.id).padStart(4,'0'),stock:12,status:'active'}))}catch{return initialProducts.map(p=>({...p,price:p.price*83,sku:'CV-'+String(p.id).padStart(4,'0'),stock:12,status:'active'}))}});
-  useEffect(()=>{if(!firebaseConfigured){localStorage.setItem('calvento_products',JSON.stringify(products));return;}const unsub=onSnapshot(collection(db,'products'),snap=>setProducts(snap.docs.map(d=>({id:d.id,...d.data()}))),err=>console.error('CALVENTO catalogue:',err));return unsub},[]);
+  useEffect(()=>{if(!firebaseConfigured){localStorage.setItem('calvento_products',JSON.stringify(products));return;}const unsub=onSnapshot(query(collection(db,'products'),where('status','==','active')),snap=>setProducts(snap.docs.map(d=>({id:d.id,...d.data()}))),err=>console.error('CALVENTO catalogue:',err));return unsub},[]);
   const [category,setCategory]=useState('All');
   const [cart,setCart]=useState([]);
   const [saved,setSaved]=useState([]);
