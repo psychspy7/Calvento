@@ -1,7 +1,6 @@
 import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 const Admin = lazy(() => import('./Admin.jsx'));
-import {firebaseConfigured,db} from './firebase.js';
-import {collection,onSnapshot,query as firestoreQuery,where} from 'firebase/firestore';
+import {firebaseConfigured,app} from './firebase.js';
 import {
   ArrowDownRight, ArrowRight, ArrowUpRight, Search, Heart, ShoppingBag,
   Menu, X, Plus, Minus, Check, Instagram, MoveUpRight
@@ -26,7 +25,7 @@ const money = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR
 
 function App(){
   const [products,setProducts]=useState(()=>{const defaults=initialProducts.map(p=>({...p,sku:p.sku||'CV-'+String(p.id).padStart(4,'0'),stock:p.stock??12,status:p.status||'active'}));try{const saved=JSON.parse(localStorage.getItem('calvento_products'));if(!Array.isArray(saved))return defaults;if(localStorage.getItem('calvento_catalog_v2')==='1')return saved;const custom=saved.filter(p=>!defaults.some(d=>String(d.id)===String(p.id)));localStorage.setItem('calvento_catalog_v2','1');return [...defaults,...custom]}catch{return defaults}});
-  useEffect(()=>{if(!firebaseConfigured){localStorage.setItem('calvento_products',JSON.stringify(products));return;}const unsub=onSnapshot(firestoreQuery(collection(db,'products'),where('status','==','active')),snap=>setProducts(snap.docs.map(d=>({id:d.id,...d.data()}))),err=>console.error('CALVENTO catalogue:',err));return unsub},[]);
+  useEffect(()=>{if(!firebaseConfigured){localStorage.setItem('calvento_products',JSON.stringify(products));return;}let unsub=()=>{};let cancelled=false;(async()=>{try{const fs=await import('firebase/firestore');if(cancelled)return;const db=fs.getFirestore(app);unsub=fs.onSnapshot(fs.query(fs.collection(db,'products'),fs.where('status','==','active')),snap=>setProducts(snap.docs.map(d=>({id:d.id,...d.data()}))),err=>console.error('CALVENTO catalogue:',err))}catch(err){console.error('CALVENTO catalogue setup:',err)}})();return()=>{cancelled=true;unsub()}},[]);
   const [category,setCategory]=useState('All');
   const [selectedProduct,setSelectedProduct]=useState(null);
   const [selectedImage,setSelectedImage]=useState(0);
