@@ -1,0 +1,108 @@
+import React, { useMemo, useState } from 'react';
+import {
+  ArrowDownRight, ArrowRight, ArrowUpRight, Search, Heart, ShoppingBag,
+  Menu, X, Plus, Minus, Check, Instagram, MoveUpRight
+} from 'lucide-react';
+
+const products = [
+  {id:1,name:'Sovereign Wool Overcoat',category:'Apparel',type:'THE STANDARD',price:380,description:'Double-faced virgin wool',image:'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=900&q=85',tone:'stone'},
+  {id:2,name:'Milanese Cashmere Turtleneck',category:'Apparel',type:'NEW ARRIVAL',price:240,description:'Grade-A Italian cashmere',image:'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=85',tone:'cream'},
+  {id:3,name:'Atelier Leather Tote',category:'Accessories',type:'ESSENTIAL',price:265,description:'Vegetable-tanned calfskin',image:'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=85',tone:'sand'},
+  {id:4,name:'Serein Sculptural Loafer',category:'Accessories',type:'LIMITED EDITION',price:225,description:'Hand-finished Italian leather',image:'https://images.unsplash.com/photo-1531310197839-ccf54634509e?auto=format&fit=crop&w=900&q=85',tone:'stone'},
+  {id:5,name:'Forma Ceramic Table Lamp',category:'Living',type:'OBJECT No. 04',price:190,description:'Hand-glazed stoneware',image:'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=85',tone:'cream'},
+  {id:6,name:'No. 08 Eau de Parfum',category:'Objects',type:'THE SCENT EDIT',price:145,description:'Cedar · iris · quiet musk',image:'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=900&q=85',tone:'sand'},
+  {id:7,name:'Arc Stainless Timepiece',category:'Accessories',type:'CONSIDERED DESIGN',price:320,description:'Brushed steel, automatic movement',image:'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85',tone:'stone'},
+  {id:8,name:'Linen Weekend Shirt',category:'Apparel',type:'WARM WEATHER',price:125,description:'European flax linen',image:'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=900&q=85',tone:'cream'}
+];
+
+const money = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n*83);
+
+function App(){
+  const [category,setCategory]=useState('All');
+  const [cart,setCart]=useState([]);
+  const [saved,setSaved]=useState([]);
+  const [cartOpen,setCartOpen]=useState(false);
+  const [searchOpen,setSearchOpen]=useState(false);
+  const [query,setQuery]=useState('');
+  const [mobileOpen,setMobileOpen]=useState(false);
+  const [notice,setNotice]=useState('');
+  const [email,setEmail]=useState('');
+  const [subscribed,setSubscribed]=useState(false);
+
+  const visible=useMemo(()=>products.filter(p=>(category==='All'||p.category===category)&&(!query||p.name.toLowerCase().includes(query.toLowerCase())||p.category.toLowerCase().includes(query.toLowerCase()))),[category,query]);
+  const count=cart.reduce((s,p)=>s+p.qty,0);
+  const total=cart.reduce((s,p)=>s+p.price*p.qty,0);
+  const flash=(msg)=>{setNotice(msg);window.clearTimeout(window.__calventoToast);window.__calventoToast=window.setTimeout(()=>setNotice(''),2400)};
+  const add=(product)=>{setCart(old=>{const found=old.find(p=>p.id===product.id);return found?old.map(p=>p.id===product.id?{...p,qty:p.qty+1}:p):[...old,{...product,qty:1}]});flash('Added to your bag');};
+  const updateQty=(id,delta)=>setCart(old=>old.map(p=>p.id===id?{...p,qty:p.qty+delta}:p).filter(p=>p.qty>0));
+  const toggleSave=(id)=>setSaved(old=>old.includes(id)?old.filter(x=>x!==id):[...old,id]);
+  const jump=(id)=>{document.getElementById(id)?.scrollIntoView({behavior:'smooth'});setMobileOpen(false)};
+
+  return <div className="site-shell">
+    <div className="announcement"><span>COMPLIMENTARY SHIPPING ON ORDERS OVER ₹15,000</span><span className="announce-right">A CONSIDERED WAY OF LIVING <i>✳</i></span></div>
+    <header className="header">
+      <button className="icon-btn mobile-menu" aria-label="Open menu" onClick={()=>setMobileOpen(true)}><Menu size={20}/></button>
+      <nav className="desktop-nav"><button onClick={()=>jump('collection')}>SHOP</button><button onClick={()=>jump('philosophy')}>THE HOUSE</button><button onClick={()=>jump('journal')}>JOURNAL</button></nav>
+      <a className="wordmark" href="#" onClick={e=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'})}}>CALVENTO<span>®</span></a>
+      <div className="header-actions">
+        <button className="icon-btn" aria-label="Search" onClick={()=>setSearchOpen(true)}><Search size={19}/></button>
+        <button className="icon-btn saved-action" aria-label="Saved items" onClick={()=>{setCategory('All');jump('collection');flash(saved.length? saved.length+' saved pieces':'Your wishlist is waiting')}}><Heart size={19}/>{saved.length>0&&<b className="tiny-count">{saved.length}</b>}</button>
+        <button className="icon-btn bag-action" aria-label="Shopping bag" onClick={()=>setCartOpen(true)}><ShoppingBag size={19}/><b className="bag-count">{count}</b></button>
+      </div>
+    </header>
+
+    {mobileOpen&&<div className="mobile-menu-panel"><div className="mobile-menu-top"><span className="wordmark">CALVENTO<span>®</span></span><button className="icon-btn" onClick={()=>setMobileOpen(false)}><X/></button></div><button onClick={()=>jump('collection')}>Shop the collection <ArrowUpRight/></button><button onClick={()=>jump('philosophy')}>The house <ArrowUpRight/></button><button onClick={()=>jump('journal')}>Journal <ArrowUpRight/></button><small>FORM & ESSENCE · FW26</small></div>}
+
+    <main>
+      <section className="hero">
+        <div className="hero-image"><img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=2000&q=90" alt="Editorial portrait in sculptural black tailoring"/><div className="image-index">CAMPAIGN No. 01 <span>FW / 26</span></div></div>
+        <div className="hero-copy">
+          <div className="eyebrow"><span className="gold-dot"></span> CALVENTO / AUTUMN—WINTER 2026</div>
+          <h1>Form<br/><em>& essence.</em></h1>
+          <p className="hero-lede">A study in restraint, made for<br className="desktop-only"/> the life you lead.</p>
+          <div className="hero-links"><button className="gold-button" onClick={()=>jump('collection')}>EXPLORE THE COLLECTION <ArrowUpRight size={15}/></button><button className="text-link" onClick={()=>jump('philosophy')}>OUR PHILOSOPHY <ArrowUpRight size={14}/></button></div>
+          <div className="hero-foot"><span>01 / 04 — THE NEW STANDARD</span><span>DESIGNED TO<br/>BE LIVED IN.</span></div>
+          <div className="hero-ornament">C.</div>
+        </div>
+      </section>
+
+      <section className="manifesto" id="philosophy">
+        <div className="section-kicker"><span>01 / THE STANDARD</span><span>LESS, BUT BETTER</span></div>
+        <div className="manifesto-grid"><h2>Luxury is<br/><em>not loud.</em></h2><div className="manifesto-copy"><p>It is the weight of a perfect shoulder. The hand of a cloth that only gets better with time. The quiet confidence of knowing exactly where something came from.</p><a onClick={()=>jump('journal')}>A NOTE FROM THE HOUSE <ArrowUpRight size={14}/></a></div></div>
+      </section>
+
+      <section className="collection-section" id="collection">
+        <div className="collection-heading"><div><div className="section-kicker"><span>02 / THE CURATED DROP</span><span>OBJECTS WITH INTENTION</span></div><h2>Objects of <em>desire.</em></h2></div><p>A considered edit of pieces<br/>to keep, use and live with.</p></div>
+        <div className="collection-toolbar"><div className="filters">{['All','Apparel','Accessories','Living','Objects'].map(c=><button key={c} className={category===c?'active':''} onClick={()=>setCategory(c)}>{c}</button>)}</div><span>{visible.length.toString().padStart(2,'0')} PIECES <span className="toolbar-divider">/</span> FW26</span></div>
+        <div className="product-grid">{visible.map((p,i)=><article className="product-card" key={p.id}>
+          <div className="product-image"><img src={p.image} alt={p.name} loading="lazy"/><span className="product-label">{p.type}</span><button className={'heart-btn '+(saved.includes(p.id)?'is-saved':'')} aria-label="Save item" onClick={()=>toggleSave(p.id)}><Heart size={17} fill={saved.includes(p.id)?'currentColor':'none'}/></button><button className="quick-add" onClick={()=>add(p)}>ADD TO BAG <ArrowUpRight size={13}/></button></div>
+          <div className="product-meta"><span>{p.category.toUpperCase()}</span><span>{money(p.price)}</span></div><h3>{p.name}</h3><p>{p.description}</p>
+        </article>)}</div>
+        {visible.length===0&&<div className="empty-state">No pieces found. Try another search.</div>}
+        <div className="collection-bottom"><span>THE CALVENTO EDIT — 08 PIECES</span><button onClick={()=>{setCategory('All');setQuery('')}}>VIEW THE FULL EDIT <ArrowUpRight size={14}/></button></div>
+      </section>
+
+      <section className="feature-story">
+        <div className="feature-photo"><img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1500&q=85" alt="A considered wardrobe in natural light" loading="lazy"/><span>STUDY No. 02 / MATERIAL</span></div>
+        <div className="feature-copy"><div className="section-kicker"><span>03 / MADE FOR YOUR WORLD</span></div><h2>Keep what<br/><em>matters.</em></h2><p>We believe the best things earn their place. Through thoughtful design, honest materials and an uncompromising eye for detail, we bring together objects that make everyday life feel considered.</p><button className="light-button" onClick={()=>jump('journal')}>DISCOVER THE HOUSE <ArrowUpRight size={14}/></button><div className="feature-number">02</div></div>
+      </section>
+
+      <section className="journal-section" id="journal"><div className="section-kicker"><span>04 / THE JOURNAL</span><span>NOTES ON CRAFT, MATERIAL & TIME</span></div><div className="journal-heading"><h2>In <em>practice.</em></h2><button onClick={()=>flash('Journal stories are coming soon')}>VIEW ALL STORIES <ArrowUpRight size={14}/></button></div><div className="journal-grid">
+        <article><div className="journal-image"><img src="https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=1000&q=85" loading="lazy" alt="A timeless coat"/><span>01 / MATERIAL</span></div><small>ORIGIN / 04.09.26</small><h3>The long life of a good coat.</h3><p>Why we choose cloth that asks to be lived in.</p><a onClick={()=>flash('This story is coming soon')}>READ THE STORY <ArrowUpRight size={13}/></a></article>
+        <article><div className="journal-image"><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1000&q=85" loading="lazy" alt="Fine cotton fabric"/><span>02 / PROCESS</span></div><small>PROCESS / 05.18.26</small><h3>Inside the finishing room.</h3><p>Sixteen hands, one final stitch.</p><a onClick={()=>flash('This story is coming soon')}>READ THE STORY <ArrowUpRight size={13}/></a></article>
+        <article><div className="journal-image"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1000&q=85" loading="lazy" alt="A curated wardrobe"/><span>03 / PERSPECTIVE</span></div><small>PERSPECTIVE / 06.02.26</small><h3>Fewer things. Better stories.</h3><p>On building a wardrobe with intention.</p><a onClick={()=>flash('This story is coming soon')}>READ THE STORY <ArrowUpRight size={13}/></a></article>
+      </div></section>
+
+      <section className="newsletter"><div><div className="section-kicker"><span>NOTES FROM THE HOUSE</span></div><h2>A little more<br/><em>considered.</em></h2><p>Occasional letters on craft, material and new work.<br/>No noise. Just the things worth sharing.</p></div><form onSubmit={e=>{e.preventDefault();if(email.includes('@')){setSubscribed(true);setEmail('')}else flash('Please enter a valid email address')}}><label htmlFor="email">YOUR EMAIL ADDRESS</label><div className="email-line"><input id="email" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@email.com" required/><button aria-label="Subscribe"><ArrowUpRight/></button></div><small>{subscribed?'Thank you. You are on the list.':'By subscribing, you agree to receive occasional correspondence from CALVENTO.'}</small></form></section>
+    </main>
+
+    <footer className="footer"><div className="footer-main"><div className="footer-brand"><a className="wordmark" href="#">CALVENTO<span>®</span></a><p>Contemporary luxury,<br/>consciously made.</p><div className="social"><a href="https://instagram.com" target="_blank" rel="noreferrer"><Instagram size={16}/></a><a href="mailto:hello@calvento.com"><ArrowUpRight size={16}/></a></div></div><div className="footer-col"><span>CLIENT SERVICES</span><a href="mailto:care@calvento.com">Contact</a><a onClick={()=>flash('Shipping information will be available at launch')}>Shipping & returns</a><a onClick={()=>flash('Care guide coming soon')}>Care guide</a></div><div className="footer-col"><span>THE HOUSE</span><a onClick={()=>jump('philosophy')}>Our philosophy</a><a onClick={()=>jump('collection')}>Shop the collection</a><a onClick={()=>jump('journal')}>Journal</a></div><div className="footer-col"><span>LEGAL</span><a onClick={()=>flash('Privacy policy coming soon')}>Privacy</a><a onClick={()=>flash('Terms coming soon')}>Terms & conditions</a><a onClick={()=>flash('Accessibility statement coming soon')}>Accessibility</a></div></div><div className="footer-bottom"><span>© 2026 CALVENTO. ALL RIGHTS RESERVED.</span><span>MADE WITH INTENTION <i>✳</i></span><button onClick={()=>window.scrollTo({top:0,behavior:'smooth'})}>BACK TO TOP ↑</button></div></footer>
+
+    {searchOpen&&<div className="overlay" onClick={()=>setSearchOpen(false)}><div className="search-panel" onClick={e=>e.stopPropagation()}><div className="panel-top"><span>SEARCH THE EDIT</span><button className="icon-btn" onClick={()=>setSearchOpen(false)}><X/></button></div><div className="search-input"><Search/><input autoFocus placeholder="What are you looking for?" value={query} onChange={e=>{setQuery(e.target.value);setCategory('All')}}/><button onClick={()=>{setQuery('');setSearchOpen(false);jump('collection')}}>VIEW <ArrowUpRight size={14}/></button></div><p>TRY: CASHMERE, LEATHER, OBJECTS</p></div></div>}
+
+    {cartOpen&&<div className="overlay cart-overlay" onClick={()=>setCartOpen(false)}><aside className="cart-drawer" onClick={e=>e.stopPropagation()}><div className="cart-head"><div><span>YOUR SELECTION</span><h2>The bag <em>({count})</em></h2></div><button className="icon-btn" onClick={()=>setCartOpen(false)}><X/></button></div>{cart.length===0?<div className="cart-empty"><ShoppingBag size={28}/><h3>Your bag is waiting.</h3><p>Discover pieces made to be kept.</p><button className="gold-button" onClick={()=>{setCartOpen(false);jump('collection')}}>EXPLORE THE EDIT <ArrowUpRight size={14}/></button></div>:<><div className="cart-items">{cart.map(p=><div className="cart-item" key={p.id}><img src={p.image} alt={p.name}/><div className="cart-item-info"><span>{p.category.toUpperCase()}</span><h3>{p.name}</h3><p>{money(p.price)}</p><div className="qty"><button onClick={()=>updateQty(p.id,-1)}><Minus size={12}/></button><span>{p.qty}</span><button onClick={()=>updateQty(p.id,1)}><Plus size={12}/></button></div></div><button className="remove-item" onClick={()=>updateQty(p.id,-p.qty)}>REMOVE</button></div>)}</div><div className="cart-summary"><div><span>SUBTOTAL</span><strong>{money(total)}</strong></div><p>Shipping and taxes calculated at checkout.</p><button className="gold-button checkout" onClick={()=>flash('Checkout integration will be connected in the next phase')}>CONTINUE TO CHECKOUT <ArrowUpRight size={15}/></button><small>SECURE CHECKOUT · INDIA</small></div></>}</aside></div>}
+    {notice&&<div className="toast"><Check size={15}/>{notice}</div>}
+  </div>
+}
+
+export default App;
