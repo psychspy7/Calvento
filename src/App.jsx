@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import Admin from './Admin.jsx';
 import {
   ArrowDownRight, ArrowRight, ArrowUpRight, Search, Heart, ShoppingBag,
   Menu, X, Plus, Minus, Check, Instagram, MoveUpRight
 } from 'lucide-react';
 
-const products = [
+const initialProducts = [
   {id:1,name:'Sovereign Wool Overcoat',category:'Apparel',type:'THE STANDARD',price:380,description:'Double-faced virgin wool',image:'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=900&q=85',tone:'stone'},
   {id:2,name:'Milanese Cashmere Turtleneck',category:'Apparel',type:'NEW ARRIVAL',price:240,description:'Grade-A Italian cashmere',image:'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=85',tone:'cream'},
   {id:3,name:'Atelier Leather Tote',category:'Accessories',type:'ESSENTIAL',price:265,description:'Vegetable-tanned calfskin',image:'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=85',tone:'sand'},
@@ -15,9 +16,12 @@ const products = [
   {id:8,name:'Linen Weekend Shirt',category:'Apparel',type:'WARM WEATHER',price:125,description:'European flax linen',image:'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=900&q=85',tone:'cream'}
 ];
 
-const money = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n*83);
+const money = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n);
 
 function App(){
+  const [products,setProducts]=useState(()=>{try{return JSON.parse(localStorage.getItem('calvento_products'))||initialProducts.map(p=>({...p,price:p.price*83,sku:'CV-'+String(p.id).padStart(4,'0'),stock:12,status:'active'}))}catch{return initialProducts.map(p=>({...p,price:p.price*83,sku:'CV-'+String(p.id).padStart(4,'0'),stock:12,status:'active'}))}});
+  useEffect(()=>{localStorage.setItem('calvento_products',JSON.stringify(products))},[products]);
+  if(window.location.pathname==='/admin') return <Admin />;
   const [category,setCategory]=useState('All');
   const [cart,setCart]=useState([]);
   const [saved,setSaved]=useState([]);
@@ -29,11 +33,11 @@ function App(){
   const [email,setEmail]=useState('');
   const [subscribed,setSubscribed]=useState(false);
 
-  const visible=useMemo(()=>products.filter(p=>(category==='All'||p.category===category)&&(!query||p.name.toLowerCase().includes(query.toLowerCase())||p.category.toLowerCase().includes(query.toLowerCase()))),[category,query]);
+  const visible=useMemo(()=>products.filter(p=>p.status!=='draft'&&(category==='All'||p.category===category)&&(!query||p.name.toLowerCase().includes(query.toLowerCase())||p.category.toLowerCase().includes(query.toLowerCase()))),[products,category,query]);
   const count=cart.reduce((s,p)=>s+p.qty,0);
   const total=cart.reduce((s,p)=>s+p.price*p.qty,0);
   const flash=(msg)=>{setNotice(msg);window.clearTimeout(window.__calventoToast);window.__calventoToast=window.setTimeout(()=>setNotice(''),2400)};
-  const add=(product)=>{setCart(old=>{const found=old.find(p=>p.id===product.id);return found?old.map(p=>p.id===product.id?{...p,qty:p.qty+1}:p):[...old,{...product,qty:1}]});flash('Added to your bag');};
+  const add=(product)=>{if(product.stock!==undefined&&product.stock<=0){flash('This piece is currently out of stock');return;}setCart(old=>{const found=old.find(p=>p.id===product.id);return found?old.map(p=>p.id===product.id?{...p,qty:p.qty+1}:p):[...old,{...product,qty:1}]});flash('Added to your bag');};
   const updateQty=(id,delta)=>setCart(old=>old.map(p=>p.id===id?{...p,qty:p.qty+delta}:p).filter(p=>p.qty>0));
   const toggleSave=(id)=>setSaved(old=>old.includes(id)?old.filter(x=>x!==id):[...old,id]);
   const jump=(id)=>{document.getElementById(id)?.scrollIntoView({behavior:'smooth'});setMobileOpen(false)};
@@ -96,7 +100,7 @@ function App(){
       <section className="newsletter"><div><div className="section-kicker"><span>NOTES FROM THE HOUSE</span></div><h2>A little more<br/><em>considered.</em></h2><p>Occasional letters on craft, material and new work.<br/>No noise. Just the things worth sharing.</p></div><form onSubmit={e=>{e.preventDefault();if(email.includes('@')){setSubscribed(true);setEmail('')}else flash('Please enter a valid email address')}}><label htmlFor="email">YOUR EMAIL ADDRESS</label><div className="email-line"><input id="email" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@email.com" required/><button aria-label="Subscribe"><ArrowUpRight/></button></div><small>{subscribed?'Thank you. You are on the list.':'By subscribing, you agree to receive occasional correspondence from CALVENTO.'}</small></form></section>
     </main>
 
-    <footer className="footer"><div className="footer-main"><div className="footer-brand"><a className="wordmark" href="#">CALVENTO<span>®</span></a><p>Contemporary luxury,<br/>consciously made.</p><div className="social"><a href="https://instagram.com" target="_blank" rel="noreferrer"><Instagram size={16}/></a><a href="mailto:hello@calvento.com"><ArrowUpRight size={16}/></a></div></div><div className="footer-col"><span>CLIENT SERVICES</span><a href="mailto:care@calvento.com">Contact</a><a onClick={()=>flash('Shipping information will be available at launch')}>Shipping & returns</a><a onClick={()=>flash('Care guide coming soon')}>Care guide</a></div><div className="footer-col"><span>THE HOUSE</span><a onClick={()=>jump('philosophy')}>Our philosophy</a><a onClick={()=>jump('collection')}>Shop the collection</a><a onClick={()=>jump('journal')}>Journal</a></div><div className="footer-col"><span>LEGAL</span><a onClick={()=>flash('Privacy policy coming soon')}>Privacy</a><a onClick={()=>flash('Terms coming soon')}>Terms & conditions</a><a onClick={()=>flash('Accessibility statement coming soon')}>Accessibility</a></div></div><div className="footer-bottom"><span>© 2026 CALVENTO. ALL RIGHTS RESERVED.</span><span>MADE WITH INTENTION <i>✳</i></span><button onClick={()=>window.scrollTo({top:0,behavior:'smooth'})}>BACK TO TOP ↑</button></div></footer>
+    <footer className="footer"><div className="footer-main"><div className="footer-brand"><a className="wordmark" href="#">CALVENTO<span>®</span></a><p>Contemporary luxury,<br/>consciously made.</p><div className="social"><a href="https://instagram.com" target="_blank" rel="noreferrer"><Instagram size={16}/></a><a href="mailto:hello@calvento.com"><ArrowUpRight size={16}/></a></div></div><div className="footer-col"><span>CLIENT SERVICES</span><a href="mailto:care@calvento.com">Contact</a><a onClick={()=>flash('Shipping information will be available at launch')}>Shipping & returns</a><a onClick={()=>flash('Care guide coming soon')}>Care guide</a></div><div className="footer-col"><span>THE HOUSE</span><a onClick={()=>jump('philosophy')}>Our philosophy</a><a onClick={()=>jump('collection')}>Shop the collection</a><a onClick={()=>jump('journal')}>Journal</a></div><div className="footer-col"><span>CALVENTO</span><a href="/admin">Store administration ↗</a></div><div className="footer-col"><span>LEGAL</span><a onClick={()=>flash('Privacy policy coming soon')}>Privacy</a><a onClick={()=>flash('Terms coming soon')}>Terms & conditions</a><a onClick={()=>flash('Accessibility statement coming soon')}>Accessibility</a></div></div><div className="footer-bottom"><span>© 2026 CALVENTO. ALL RIGHTS RESERVED.</span><span>MADE WITH INTENTION <i>✳</i></span><button onClick={()=>window.scrollTo({top:0,behavior:'smooth'})}>BACK TO TOP ↑</button></div></footer>
 
     {searchOpen&&<div className="overlay" onClick={()=>setSearchOpen(false)}><div className="search-panel" onClick={e=>e.stopPropagation()}><div className="panel-top"><span>SEARCH THE EDIT</span><button className="icon-btn" onClick={()=>setSearchOpen(false)}><X/></button></div><div className="search-input"><Search/><input autoFocus placeholder="What are you looking for?" value={query} onChange={e=>{setQuery(e.target.value);setCategory('All')}}/><button onClick={()=>{setQuery('');setSearchOpen(false);jump('collection')}}>VIEW <ArrowUpRight size={14}/></button></div><p>TRY: CASHMERE, LEATHER, OBJECTS</p></div></div>}
 
