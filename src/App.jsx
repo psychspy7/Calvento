@@ -2,12 +2,14 @@ import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 const Admin = lazy(() => import('./Admin.jsx'));
 const Legal = lazy(() => import('./Legal.jsx'));
 import {firebaseConfigured,app} from './firebase.js';
+import { wardrobeProducts } from './wardrobeProducts.js';
 import {
   ArrowDownRight, ArrowRight, ArrowUpRight, Search, Heart, ShoppingBag,
-  Menu, X, Plus, Minus, Check, Instagram, Linkedin, MoveUpRight
+  Menu, X, Plus, Minus, Check, Instagram, Linkedin, MoveUpRight, Sparkles
 } from 'lucide-react';
 
 const initialProducts = [
+  ...wardrobeProducts,
   {id:1,name:'Sovereign Wool Overcoat',category:'Apparel',type:'THE STANDARD',price:31540,description:'Double-faced wool · relaxed tailored fit',image:'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=1100&q=90',images:['https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=1200&q=90','https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=1200&q=90'],specs:[['Material','Wool blend'],['Fit','Relaxed tailored'],['Care','Professional dry clean'],['Origin','Designed for the CALVENTO edit']],sizes:['S','M','L','XL'],tone:'stone'},
   {id:2,name:'Cashmere Crewneck Knit',category:'Apparel',type:'NEW ARRIVAL',price:19920,description:'Soft-touch knit · considered everyday layer',image:'/products/calvento-cashmere-crewneck.svg',images:['/products/calvento-cashmere-crewneck.svg'],specs:[['Material','Cashmere blend'],['Fit','Regular'],['Care','Hand wash cold'],['Details','Ribbed neckline and cuffs']],sizes:['S','M','L','XL'],tone:'cream'},
   {id:3,name:'Atelier Leather Tote',category:'Accessories',type:'ESSENTIAL',price:21995,description:'Structured silhouette · everyday carry',image:'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1100&q=90',images:['https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1200&q=90','https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1200&q=90'],specs:[['Material','Textured vegan leather'],['Closure','Magnetic fastening'],['Carry','Shoulder and hand carry'],['Care','Wipe with a soft cloth']],sizes:['One size'],tone:'sand'},
@@ -30,7 +32,7 @@ const slugify = value => String(value||'').toLowerCase().normalize('NFKD').repla
 const money = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n);
 
 function App(){
-  const [products,setProducts]=useState(()=>{const defaults=initialProducts.map(p=>({...p,sku:p.sku||'CV-'+String(p.id).padStart(4,'0'),stock:p.stock??12,status:p.status||'active'}));try{const saved=JSON.parse(localStorage.getItem('calvento_products'));if(!Array.isArray(saved))return defaults;if(localStorage.getItem('calvento_catalog_v2')==='1')return saved.map(p=>String(p.id)==='2'?{...p,image:'/products/calvento-cashmere-crewneck.svg',images:['/products/calvento-cashmere-crewneck.svg']}:p);const custom=saved.filter(p=>!defaults.some(d=>String(d.id)===String(p.id)));localStorage.setItem('calvento_catalog_v2','1');return [...defaults,...custom]}catch{return defaults}});
+  const [products,setProducts]=useState(()=>{const defaults=initialProducts.map(p=>({...p,sku:p.sku||'CV-'+String(p.id).padStart(4,'0'),stock:p.stock??12,status:p.status||'active'}));try{const saved=JSON.parse(localStorage.getItem('calvento_products_v3'));if(!Array.isArray(saved)||saved.length===0)return defaults;const custom=saved.filter(p=>!defaults.some(d=>String(d.id)===String(p.id)));localStorage.setItem('calvento_products_v3',JSON.stringify([...defaults,...custom]));return [...defaults,...custom]}catch{return defaults}});
   useEffect(()=>{if(!firebaseConfigured){localStorage.setItem('calvento_products',JSON.stringify(products));return;}let unsub=()=>{};let cancelled=false;(async()=>{try{const fs=await import('firebase/firestore');if(cancelled)return;const db=fs.getFirestore(app);unsub=fs.onSnapshot(fs.query(fs.collection(db,'products'),fs.where('status','==','active')),snap=>setProducts(snap.docs.map(d=>{const product={id:d.id,...d.data()};return String(product.id)==='2'?{...product,image:'/products/calvento-cashmere-crewneck.svg',images:['/products/calvento-cashmere-crewneck.svg']}:product})),err=>console.error('CALVENTO catalogue:',err))}catch(err){console.error('CALVENTO catalogue setup:',err)}})();return()=>{cancelled=true;unsub()}},[]);
   const [category,setCategory]=useState('All');
   const [selectedProduct,setSelectedProduct]=useState(null);
