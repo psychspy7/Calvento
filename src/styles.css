@@ -69,3 +69,22 @@
 
 .faq-section{padding:88px 8.5%;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.faq-heading{display:flex;align-items:end;justify-content:space-between;gap:30px;margin:42px 0 35px}.faq-heading h2{font-family:var(--serif);font-weight:400;font-size:clamp(48px,6vw,82px);line-height:.9;letter-spacing:-.04em;margin:0}.faq-heading h2 em{font-weight:400}.faq-heading>p{max-width:310px;color:#aaa69e;font-family:var(--serif);font-size:18px;line-height:1.4;margin:0 0 5px}.faq-list{max-width:850px;margin-left:auto;border-top:1px solid var(--line)}.faq-list details{border-bottom:1px solid var(--line);padding:18px 0}.faq-list summary{cursor:pointer;list-style:none;font-family:var(--serif);font-size:21px;color:#e4ded2}.faq-list summary::-webkit-details-marker{display:none}.faq-list summary:after{content:'+';float:right;color:var(--gold);font:20px Arial}.faq-list details[open] summary:after{content:'−'}.faq-list details p{max-width:690px;margin:13px 0 0;color:#aaa69e;font-size:13px;line-height:1.7}.faq-list details a{color:var(--gold)}
 @media(max-width:620px){.faq-section{padding:65px 7%}.faq-heading{display:block;margin:35px 0 27px}.faq-heading>p{margin-top:20px;font-size:16px}.faq-list summary{font-size:18px}}
+
+/* Bespoke & WhatsApp checkout enhancements */
+.bespoke-badge{display:flex;align-items:center;gap:8px;background:rgba(199,173,87,.12);border:1px solid rgba(199,173,87,.32);padding:9px 12px;margin:18px 0;font-size:8px;letter-spacing:.14em;color:#67582b}
+.detail-actions{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.whatsapp-inquire-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:#fff;min-height:46px;padding:0 20px;font-size:9px;letter-spacing:.14em;font-weight:700;text-decoration:none;transition:background .2s,transform .2s}
+.whatsapp-inquire-btn:hover{background:#1ebe57;transform:translateY(-1px);color:#fff}
+.cart-craft-note{display:flex;align-items:center;gap:8px;background:rgba(199,173,87,.15);border:1px solid rgba(199,173,87,.35);padding:10px 14px;font-size:8px;letter-spacing:.1em;color:#4c4021;margin-bottom:12px}
+.whatsapp-checkout{background:#25D366;color:#fff}
+.whatsapp-checkout:hover{background:#1ebe57;color:#fff}
+
+/* Mobile accessibility enhancements: ensure 44px min tap targets */
+@media(max-width:760px){
+  .icon-btn{min-width:44px;min-height:44px}
+  .filters button{min-height:44px;padding:0 8px;display:inline-flex;align-items:center}
+  .size-options button{min-width:48px;height:44px;font-size:12px}
+  .qty button{width:38px;height:38px}
+  .remove-item{padding:8px 0;min-height:44px;display:inline-flex;align-items:center}
+  .detail-add,.whatsapp-inquire-btn,.gold-button{min-height:48px}
+}
