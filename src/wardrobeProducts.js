@@ -1,33 +1,54 @@
+/**
+ * CALVENTO HAUTE LUXURY WARDROBE CATALOG
+ * Verified & Mapped to Exact Asset Photography (calvento-look-00.jpg - calvento-look-41.jpg)
+ * 14 Masterpieces across 42 Haute Lookbook Assets
+ */
+
 export const wardrobeProducts = [
   {
     id: 'cv-w-01',
-    name: 'The Sovereign Cashmere Knit Crew',
-    category: 'Apparel',
-    type: 'SIGNATURE EDIT',
-    price: 24500,
-    description: 'Pure Italian cashmere knit in iconic ivory with subtle CALVENTO chest embroidery. Cut for an effortless unisex silhouette.',
-    image: '/wardrobe/calvento-look-00.jpg',
-    images: ['/wardrobe/calvento-look-00.jpg', '/wardrobe/calvento-look-01.jpg', '/wardrobe/calvento-look-02.jpg'],
-    specs: [
-      ['Material', '100% Grade-A Mongolian Cashmere'],
-      ['Knit Gauge', '7-Gauge Heavyweight Fisherman Rib'],
-      ['Fit', 'Relaxed tailored unisex cut'],
-      ['Care', 'Professional dry clean only'],
-      ['Origin', 'Milano, Italy']
-    ],
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    tone: 'cream',
-    stock: 18,
     sku: 'CV-W-0001',
-    status: 'active'
+    name: 'Calvento Noir Extrait de Parfum',
+    category: 'Objects',
+    subcategory: 'Haute Parfumerie',
+    type: 'HAUTE PARFUMERIE',
+    price: 40500,
+    priceUSD: 485,
+    tagline: 'Black Rose · Smoked Incense · Rare Cambodian Oud',
+    description: 'A nocturnal symphony formulated at the highest extrait de parfum concentration. Presented in a hand-blown obsidian glass flacon crowned with a solid machined 24K gold-plated stopper.',
+    narrative: 'Formulated in the historical fragrance bastions of Grasse, France. Calvento Noir opens with a veil of smoked Calabrian bergamot and frankincense, unveiling a rare heart of nocturnal black rose and Florentine orris root. The base settles into an enduring sillage of aged Cambodian oud, natural ambergris, and Haitian vetiver.',
+    image: '/wardrobe/calvento-look-01.jpg',
+    images: [
+      '/wardrobe/calvento-look-01.jpg',
+      '/wardrobe/calvento-look-02.jpg'
+    ],
+    specs: [
+      ['Concentration', '30% Pure Extrait de Parfum'],
+      ['Olfactory Family', 'Woody Amber / Dark Floral'],
+      ['Key Notes', 'Black Rose, Smoked Incense, Florentine Orris, Rare Oud'],
+      ['Vessel', 'Hand-Blown Obsidian Glass with 24K Gold Stopper'],
+      ['Volume', '100 ml / 3.4 fl. oz.'],
+      ['Provenance', 'Hand-blended in Grasse, France']
+    ],
+    sizes: ['100 ml'],
+    tone: 'obsidian',
+    stock: 24,
+    status: 'active',
+    tags: ['Haute Parfumerie', 'Grasse Atelier', 'Extrait de Parfum', 'Limited Run', 'Unisex'],
+    pairingIds: ['cv-w-10', 'cv-w-04', 'cv-w-05']
   },
   {
     id: 'cv-w-02',
-    name: 'Atelier Sculpted Double-Breasted Overcoat',
+    sku: 'CV-W-0002',
+    name: 'The Aurelia Silk Satin Lingerie Set',
     category: 'Apparel',
-    type: 'FW26 RUNWAY',
-    price: 48900,
-    description: 'Architectural structured tailoring sculpted in double-faced virgin wool. Finished with horn buttons and deep drop shoulders.',
+    subcategory: 'Intimates',
+    type: 'SILK INTIMATES',
+    price: 54000,
+    priceUSD: 650,
+    tagline: 'Pure Como Silk Charmeuse · Jacquard Gold Band',
+    description: 'Luminous 22-momme Italian silk satin bralette and brief set. Features soft molded architectural cups and our signature metallic gold jacquard CALVENTO waistband.',
+    narrative: 'Crafted in Como, Italy, the Aurelia set unites the sensuality of pure silk charmeuse with understated graphic modernity. The unpadded balconette bralette delivers effortless support without rigid underwires, complemented by low-rise briefs engineered to lay invisible beneath bespoke trousers.',
     image: '/wardrobe/calvento-look-03.jpg',
     images: [
       '/wardrobe/calvento-look-03.jpg',
@@ -38,25 +59,32 @@ export const wardrobeProducts = [
       '/wardrobe/calvento-look-08.jpg'
     ],
     specs: [
-      ['Composition', '90% Virgin Wool, 10% Cashmere'],
-      ['Lining', '100% Cupro silk finish'],
-      ['Closure', 'Hand-stitched horn buttons'],
-      ['Fit', 'Oversized structured silhouette'],
-      ['Care', 'Specialist dry clean']
+      ['Material', '92% Mulberry Silk Charmeuse, 8% Elastane'],
+      ['Underband', 'Custom Italian Lurex Jacquard Elastic'],
+      ['Hardware', '24K Gold-Plated Adjustable Sliders'],
+      ['Fit', 'True to size; contoured ergonomic support'],
+      ['Care', 'Specialist silk hand wash or dry clean'],
+      ['Colors Included', 'Avorio (Ivory) & Noir (Obsidian)']
     ],
-    sizes: ['S', 'M', 'L', 'XL'],
-    tone: 'stone',
-    stock: 8,
-    sku: 'CV-W-0002',
-    status: 'active'
+    sizes: ['XS', 'S', 'M', 'L'],
+    tone: 'cream',
+    stock: 16,
+    status: 'active',
+    tags: ['Silk Charmeuse', 'Como Silk', 'Hand-stitched', 'Bespoke Elastic', 'Intimates Atelier'],
+    pairingIds: ['cv-w-01', 'cv-w-05', 'cv-w-11']
   },
   {
     id: 'cv-w-03',
-    name: 'Monochrome Minimalist Relaxed Blouson',
+    sku: 'CV-W-0003',
+    name: 'The Positano Ribbed Cashmere-Modal Set',
     category: 'Apparel',
-    type: 'CONTEMPORARY',
-    price: 28500,
-    description: 'Sleek zip-front blouson jacket with precision collar and storm welt pockets. Water-repellent matte-finish technical fabric.',
+    subcategory: 'Intimates',
+    type: 'LOUNGEWEAR EDIT',
+    price: 48000,
+    priceUSD: 580,
+    tagline: 'Grade-A Cashmere · Micro-Modal Rib · High-Rise Brief',
+    description: 'An ultra-soft ribbed triangle bralette and high-waisted brief in warm desert sand, accented by our signature black-and-gold woven CALVENTO underband.',
+    narrative: 'Spun from an exquisite tripartite yarn of Austrian beechwood modal, combed Grade-A cashmere, and silk. Engineered with micro-ribbed vertical knitting that elongates the torso while providing a featherlight second-skin touch.',
     image: '/wardrobe/calvento-look-09.jpg',
     images: [
       '/wardrobe/calvento-look-09.jpg',
@@ -64,24 +92,31 @@ export const wardrobeProducts = [
       '/wardrobe/calvento-look-11.jpg'
     ],
     specs: [
-      ['Fabric', 'Japanese Technical Gabardine'],
-      ['Hardware', 'Brushed palladium two-way zipper'],
-      ['Fit', 'Clean boxy drape'],
-      ['Care', 'Dry clean']
+      ['Composition', '70% Micro-Modal, 20% Grade-A Cashmere, 10% Mulberry Silk'],
+      ['Knit', 'Fine 2x2 Needle Vertical Rib'],
+      ['Waistband', 'Double-faced high-retention jacquard band'],
+      ['Rise', 'Sculpted high-waist brief with medium coverage'],
+      ['Care', 'Hand wash cold; lay flat to dry in shade']
     ],
-    sizes: ['S', 'M', 'L', 'XL'],
-    tone: 'black',
-    stock: 14,
-    sku: 'CV-W-0003',
-    status: 'active'
+    sizes: ['XS', 'S', 'M', 'L'],
+    tone: 'sand',
+    stock: 22,
+    status: 'active',
+    tags: ['Cashmere Blend', 'Second Skin', 'Ribbed Knit', 'High-Waist', 'Sustainable Luxury'],
+    pairingIds: ['cv-w-07', 'cv-w-14', 'cv-w-01']
   },
   {
     id: 'cv-w-04',
-    name: 'Fluid Evening Silk-Satin Column Gown',
+    sku: 'CV-W-0004',
+    name: 'The Smeraldo One-Shoulder Silk Gown',
     category: 'Apparel',
-    type: 'AFTER DARK',
-    price: 36000,
-    description: 'Sensual bias-cut heavy silk crepe with an open back and fluid drape that moves gracefully with every step.',
+    subcategory: 'Eveningwear',
+    type: 'HAUTE COUTURE',
+    price: 285000,
+    priceUSD: 3400,
+    tagline: '30-Momme Silk Charmeuse · Hand-Carved 24K Gold Clasp',
+    description: 'Asymmetric bias-cut evening gown in jewel-tone emerald green. Fluid gathered hip drape falling into a floor-sweeping column with a dramatic leg slit.',
+    narrative: 'Cut entirely on the true 45-degree bias from heavyweight 30-momme Italian silk charmeuse in deep emerald. The one-shoulder neckline is anchored by a solid brass shoulder cuff electroplated in 24K gold and laser-engraved with the CALVENTO insignia. Drapes around the hip like liquid mercury before parting into a thigh-high side slit.',
     image: '/wardrobe/calvento-look-12.jpg',
     images: [
       '/wardrobe/calvento-look-12.jpg',
@@ -89,24 +124,32 @@ export const wardrobeProducts = [
       '/wardrobe/calvento-look-14.jpg'
     ],
     specs: [
-      ['Fabric', '100% Mulberry Silk Crepe-de-Chine'],
-      ['Cut', 'Bias cut floor-grazing length'],
-      ['Back Detail', 'Adjustable delicate silk cords'],
-      ['Care', 'Delicate dry clean']
+      ['Fabric', '100% Pure Italian Mulberry Silk Charmeuse (30 momme)'],
+      ['Hardware', 'Solid Brass 24K Brushed Gold Shoulder Bar'],
+      ['Construction', 'Full True-Bias Cut with French Interior Seams'],
+      ['Closure', 'Concealed Swiss side-seam invisible zipper'],
+      ['Hemline', 'Hand-rolled floor-length puddle hem'],
+      ['Care', 'Specialist dry clean only']
     ],
-    sizes: ['XS', 'S', 'M', 'L'],
-    tone: 'black',
-    stock: 6,
-    sku: 'CV-W-0004',
-    status: 'active'
+    sizes: ['FR 34 (XS)', 'FR 36 (S)', 'FR 38 (M)', 'FR 40 (L)'],
+    tone: 'emerald',
+    stock: 5,
+    status: 'active',
+    tags: ['Haute Couture', 'Pure Silk Charmeuse', 'Bias-Cut', 'Hand-Gathered', 'Made in Italy'],
+    pairingIds: ['cv-w-09', 'cv-w-11', 'cv-w-01']
   },
   {
     id: 'cv-w-05',
-    name: 'The Form Tailored Wool-Mohair Trousers',
+    sku: 'CV-W-0005',
+    name: 'The Venezia Silk Velvet & Lace Corset Dress',
     category: 'Apparel',
-    type: 'THE STANDARD',
-    price: 19500,
-    description: 'High-waisted double pleated wide-leg trousers tailored with sharp central creases and side tab adjusters.',
+    subcategory: 'Eveningwear',
+    type: 'RUNWAY EDITION',
+    price: 320000,
+    priceUSD: 3850,
+    tagline: 'French Chantilly Lace · Italian Silk Velvet · Boned Bodice',
+    description: 'Architectural midi dress with structured velvet bustier, sheer floral lace torso, and pleated silk-velvet skirt with inset eyelash lace godets.',
+    narrative: 'A masterpiece of contemporary atelier corsetry. The bodice combines internal spring-steel boning with translucent French Chantilly lace and plush Italian silk-blend velvet cups. Cinching the silhouette is a velvet waist ribbon bearing a 24K gold CALVENTO plaque, flowing into an accordion-pleated skirt that reveals scalloped lace hemwork in motion.',
     image: '/wardrobe/calvento-look-15.jpg',
     images: [
       '/wardrobe/calvento-look-15.jpg',
@@ -114,24 +157,32 @@ export const wardrobeProducts = [
       '/wardrobe/calvento-look-17.jpg'
     ],
     specs: [
-      ['Fabric', '85% Super 120s Wool, 15% Kid Mohair'],
-      ['Rise', 'High-rise with internal grip waistband'],
-      ['Leg', 'Relaxed straight wide-leg'],
-      ['Care', 'Dry clean']
+      ['Velvet', '82% Viscose, 18% Mulberry Silk (Italian Silk Velvet)'],
+      ['Lace', '100% French Chantilly Eyelash Lace'],
+      ['Bodice', 'Internal multi-panel flexible spiral steel boning'],
+      ['Hardware', '24K Gold-Plated CALVENTO Ingot Waist Plaque'],
+      ['Length', 'Midi (128 cm from shoulder to lace hem)'],
+      ['Care', 'Haute couture specialist dry clean only']
     ],
-    sizes: ['28', '30', '32', '34', '36'],
-    tone: 'charcoal',
-    stock: 20,
-    sku: 'CV-W-0005',
-    status: 'active'
+    sizes: ['FR 34 (XS)', 'FR 36 (S)', 'FR 38 (M)', 'FR 40 (L)'],
+    tone: 'black',
+    stock: 4,
+    status: 'active',
+    tags: ['Bespoke Corsetry', 'French Chantilly Lace', 'Silk Velvet', 'Hand-boned', 'Runway Edition'],
+    pairingIds: ['cv-w-09', 'cv-w-11', 'cv-w-01']
   },
   {
     id: 'cv-w-06',
-    name: 'Aura Fine-Gauge Ribbed Knit Top',
+    sku: 'CV-W-0006',
+    name: 'The Signature Noir Heavyweight T-Shirt',
     category: 'Apparel',
-    type: 'NEW ESSENTIAL',
-    price: 11800,
-    description: 'Elevated high-neck base layer in micro-modal and silk. Featherlight second-skin feel with elongated cuffs.',
+    subcategory: 'Shirts',
+    type: 'THE NEW STANDARD',
+    price: 41000,
+    priceUSD: 490,
+    tagline: '320 GSM Giza Cotton & Silk · Gold Bullion Embroidery',
+    description: 'Substantial boxy oversized tee with structured 3cm mock crewneck and champagne gold embroidered CALVENTO wordmark across the chest.',
+    narrative: 'Elevating the everyday garment to sartorial perfection. Knitted from extra-long staple Giza cotton intertwined with fine mulberry silk yarn to establish a dense 320 GSM weight with zero transparency and a sculptural drape that holds its architecture throughout the day.',
     image: '/wardrobe/calvento-look-18.jpg',
     images: [
       '/wardrobe/calvento-look-18.jpg',
@@ -139,24 +190,32 @@ export const wardrobeProducts = [
       '/wardrobe/calvento-look-20.jpg'
     ],
     specs: [
-      ['Fabric', '70% Micro-Modal, 30% Mulberry Silk'],
-      ['Neckline', 'Sculpted funnel collar'],
-      ['Fit', 'Second-skin contoured cut'],
-      ['Care', 'Hand wash cold or dry clean']
+      ['Fabric', '85% Giza Extra-Long Staple Cotton, 15% Mulberry Silk'],
+      ['Weight', '320 GSM Heavyweight Dense Jersey'],
+      ['Collar', '3cm High-Density 1x1 Reinforced Ribbed Neckband'],
+      ['Embroidery', 'Champagne Gold Bullion Thread Micro-Stitching'],
+      ['Fit', 'Structured relaxed drop-shoulder cut'],
+      ['Care', 'Machine wash gentle cold inside out; line dry']
     ],
-    sizes: ['XS', 'S', 'M', 'L'],
-    tone: 'cream',
-    stock: 25,
-    sku: 'CV-W-0006',
-    status: 'active'
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    tone: 'black',
+    stock: 35,
+    status: 'active',
+    tags: ['Giza Cotton', 'Silk Enriched', '320 GSM', 'Gold Bullion Embroidery', 'Quiet Luxury Essential'],
+    pairingIds: ['cv-w-12', 'cv-w-08', 'cv-w-11']
   },
   {
     id: 'cv-w-07',
-    name: 'L’Ombre Relaxed Structured Trench',
+    sku: 'CV-W-0007',
+    name: 'The Panna Cashmere-Cotton Heavyweight Hoodie',
     category: 'Apparel',
-    type: 'OUTERWEAR',
-    price: 42000,
-    description: 'Double-breasted trench coat with storm flap, buckled waist belt, and signature horn hardware. A timeless investment piece.',
+    subcategory: 'Knitwear',
+    type: 'LEISURE ATELIER',
+    price: 74500,
+    priceUSD: 890,
+    tagline: '480 GSM Loopback Terry · Cashmere Enriched · Clean Collar',
+    description: 'Sculptural heavyweight hoodie in warm panna cream. Features an overlapping cord-free hood, dropped shoulders, and subtle gold chest embroidery.',
+    narrative: 'Crafted without drawstrings or kangaroo pocket seams to preserve an unblemished architectural plane. Cut from dense 480 GSM diagonal loopback French terry spun with 20% combed Mongolian cashmere for incomparable softness and warmth.',
     image: '/wardrobe/calvento-look-21.jpg',
     images: [
       '/wardrobe/calvento-look-21.jpg',
@@ -164,24 +223,32 @@ export const wardrobeProducts = [
       '/wardrobe/calvento-look-23.jpg'
     ],
     specs: [
-      ['Material', '100% Weatherproof Cotton Twill'],
-      ['Details', 'Storm cape, gun flap, horn buckle belt'],
-      ['Length', 'Calf-length midi drape'],
-      ['Care', 'Dry clean']
+      ['Composition', '80% Organic Combed Cotton, 20% Mongolian Cashmere'],
+      ['Weight', '480 GSM Ultra-Heavy Diagonal Loopback Terry'],
+      ['Hood', 'Double-Faced Self-Lined Crossover Hood (No drawstrings)'],
+      ['Embroidery', 'Tonal Champagne Gold Satin Stitch'],
+      ['Fit', 'Subtle oversized architectural drape'],
+      ['Care', 'Dry clean or cold wool cycle with cashmere detergent']
     ],
-    sizes: ['S', 'M', 'L', 'XL'],
-    tone: 'sand',
-    stock: 10,
-    sku: 'CV-W-0007',
-    status: 'active'
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    tone: 'cream',
+    stock: 28,
+    status: 'active',
+    tags: ['Cashmere Infused', '480 GSM', 'Architectural Hood', 'Minimalist Clean', 'Unisex Fit'],
+    pairingIds: ['cv-w-14', 'cv-w-03', 'cv-w-11']
   },
   {
     id: 'cv-w-08',
-    name: 'Calvento Heritage Embroidered Hoodie',
+    sku: 'CV-W-0008',
+    name: 'The Cortina Cashmere Quarter-Zip Pullover',
     category: 'Apparel',
-    type: 'OFF-DUTY',
-    price: 16500,
-    description: 'Heavyweight 500 GSM loopback organic French terry sweatshirt with tonal high-density micro embroidery on the chest.',
+    subcategory: 'Knitwear',
+    type: 'SARTORIAL KNIT',
+    price: 104500,
+    priceUSD: 1250,
+    tagline: '14-Gauge Biella Cashmere-Silk · 24K Gold Swiss Riri Zip',
+    description: 'Refined funnel-neck pullover knitted from 2-ply Mongolian cashmere and silk. Equipped with mirror-polished gold Swiss hardware and embroidered crest.',
+    narrative: 'Engineered in Biella, Italy on precision 14-gauge knitting looms. Blends the insulating lightness of Grade-A cashmere with the tensile strength and sheen of silk. Features a substantial ribbed funnel collar with a custom 24K gold-plated Swiss Riri zipper pull engraved with the CALVENTO monogram.',
     image: '/wardrobe/calvento-look-24.jpg',
     images: [
       '/wardrobe/calvento-look-24.jpg',
@@ -189,48 +256,64 @@ export const wardrobeProducts = [
       '/wardrobe/calvento-look-26.jpg'
     ],
     specs: [
-      ['Weight', '500 GSM Ultra-Heavy French Terry'],
-      ['Cotton', '100% GOTS Certified Organic Cotton'],
-      ['Fit', 'Subtle oversized drop-shoulder fit'],
-      ['Care', 'Machine wash gentle cold']
+      ['Yarn', '70% Grade-A Mongolian Cashmere, 30% Mulberry Silk (2-Ply)'],
+      ['Gauge', '14-Gauge Fully-Fashioned Knit'],
+      ['Zipper', '24K Gold-Plated Swiss Riri Metal Zipper with Pull Tab'],
+      ['Collar', 'Ribbed funnel neck with protective interior knit facing'],
+      ['Cuffs & Hem', 'Seamless tubular ribbing'],
+      ['Care', 'Professional dry clean only']
     ],
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
-    tone: 'stone',
-    stock: 22,
-    sku: 'CV-W-0008',
-    status: 'active'
+    sizes: ['S (46)', 'M (48)', 'L (50)', 'XL (52)', 'XXL (54)'],
+    tone: 'black',
+    stock: 18,
+    status: 'active',
+    tags: ['Grade-A Cashmere', '14-Gauge Biella Knit', 'Swiss Riri Hardware', 'Sartorial Leisure', 'Made in Italy'],
+    pairingIds: ['cv-w-06', 'cv-w-12', 'cv-w-10']
   },
   {
     id: 'cv-w-09',
-    name: 'Venturi Leather Chelsea Boot',
+    sku: 'CV-W-0009',
+    name: 'The Bellissima Vernice Ankle-Strap Pumps 105',
     category: 'Accessories',
-    type: 'FOOTWEAR',
-    price: 27500,
-    description: 'Hand-burnished Italian calfskin leather chelsea boots with Goodyear welted leather and rubber commando soles.',
+    subcategory: 'Footwear',
+    type: 'FOOTWEAR ATELIER',
+    price: 121500,
+    priceUSD: 1450,
+    tagline: 'Italian Patent Calfskin · 105mm Stiletto · Gold Padlock Charm',
+    description: 'Razor-sharp pointed pumps in glossy black vernice leather. Slender ankle strap with gold buckle and swinging CALVENTO padlock pendant.',
+    narrative: 'Handcrafted in Vigevano, Italy by master artisans. Sculpted from premium Italian vernice patent calfskin that gleams like obsidian glass. Anchored by an architectural 105mm stiletto heel balanced on a natural cuoio leather sole, accented by an ankle strap featuring a dangling 24K gold padlock charm.',
     image: '/wardrobe/calvento-look-27.jpg',
     images: [
       '/wardrobe/calvento-look-27.jpg',
       '/wardrobe/calvento-look-28.jpg'
     ],
     specs: [
-      ['Upper', 'Full-Grain Tuscan Calfskin'],
-      ['Construction', 'Goodyear Welted'],
-      ['Sole', 'Durable Vibram rubber lug tread'],
-      ['Origin', 'Handmade in Marche, Italy']
+      ['Upper', '100% Mirror-Gloss Italian Vernice Patent Calfskin'],
+      ['Lining & Insole', '100% Italian Kidskin Leather with Padded Cushioning'],
+      ['Sole', 'Natural Italian Cuoio Leather Sole with Debossed Logo'],
+      ['Heel Height', '105 mm / 4.1 inches'],
+      ['Hardware', '24K Gold-Plated Buckle & Swinging Mini Padlock Charm'],
+      ['Origin', 'Handmade in Vigevano, Italy']
     ],
-    sizes: ['40', '41', '42', '43', '44', '45'],
+    sizes: ['IT 36', 'IT 37', 'IT 38', 'IT 39', 'IT 40', 'IT 41'],
     tone: 'black',
     stock: 12,
-    sku: 'CV-W-0009',
-    status: 'active'
+    status: 'active',
+    tags: ['Handmade in Italy', 'Patent Calfskin', '105mm Heel', 'Gold Padlock Charm', 'Black Tie Ready'],
+    pairingIds: ['cv-w-04', 'cv-w-05', 'cv-w-11']
   },
   {
     id: 'cv-w-10',
-    name: 'Riviera Tailored Resort Camp Shirt',
+    sku: 'CV-W-0010',
+    name: 'The Aurelius Double-Breasted Silk-Wool Tuxedo Jacket',
     category: 'Apparel',
-    type: 'WARM WEATHER',
-    price: 13500,
-    description: 'Lightweight washed linen-viscose shirt with Cuban camp collar and hand-carved mother-of-pearl buttons.',
+    subcategory: 'Tailoring',
+    type: 'BESPOKE TAILORING',
+    price: 352000,
+    priceUSD: 4200,
+    tagline: 'Super 160s Tasmanian Wool · Silk Duchesse Lapels · 24K Ingot Bar',
+    description: 'Impeccable 6x2 double-breasted midnight black dinner jacket. Full canvas construction with wide silk duchesse peak lapels and solid gold breast pocket ingot.',
+    narrative: 'Hand-tailored in Naples adhering to classic bespoke traditions. Woven from ultra-fine Super 160s Tasmanian virgin wool blended with mulberry silk for extraordinary drape and natural luster under evening chandelier lighting. Features a full floating horsehair canvas front, hand-padded peak lapels faced in silk duchesse satin, silk-covered buttons, and a removable 24K gold-plated CALVENTO pocket bar ingot.',
     image: '/wardrobe/calvento-look-29.jpg',
     images: [
       '/wardrobe/calvento-look-29.jpg',
@@ -238,24 +321,34 @@ export const wardrobeProducts = [
       '/wardrobe/calvento-look-31.jpg'
     ],
     specs: [
-      ['Fabric', '60% French Linen, 40% Viscose'],
-      ['Collar', 'Relaxed convertible camp collar'],
-      ['Buttons', 'Genuine iridescent mother-of-pearl'],
-      ['Care', 'Gentle hand wash cold']
+      ['Shell', '85% Super 160s Tasmanian Virgin Wool, 15% Mulberry Silk'],
+      ['Lapel Facing', '100% Pure Silk Duchesse Satin'],
+      ['Canvassing', 'Full Floating Natural Horsehair Canvas'],
+      ['Buttons', 'Hand-Covered Silk Satin Buttons (6x2 configuration)'],
+      ['Pockets', 'Double-Jetted Flapless Pockets; Welt Breast Pocket'],
+      ['Accessory', 'Detachable 24K Gold-Plated Engraved Pocket Bar Ingot'],
+      ['Lining', '100% Cupro Bemberg Breathable Jacquard Lining'],
+      ['Care', 'Bespoke tailoring specialist dry clean only']
     ],
-    sizes: ['S', 'M', 'L', 'XL'],
-    tone: 'sand',
-    stock: 16,
-    sku: 'CV-W-0010',
-    status: 'active'
+    sizes: ['IT 46 (US 36)', 'IT 48 (US 38)', 'IT 50 (US 40)', 'IT 52 (US 42)', 'IT 54 (US 44)'],
+    tone: 'black',
+    stock: 7,
+    status: 'active',
+    tags: ['Full Canvas Construction', 'Super 160s Wool', 'Duchesse Silk Lapels', 'Bespoke Ingot Pin', 'Neapolitan Tailoring'],
+    pairingIds: ['cv-w-06', 'cv-w-01', 'cv-w-11']
   },
   {
     id: 'cv-w-11',
-    name: 'The Studio Leather Portfolio Tote',
+    sku: 'CV-W-0011',
+    name: 'The Principessa Box Calfskin Flap Shoulder Bag',
     category: 'Accessories',
-    type: 'LEATHER GOODS',
-    price: 34000,
-    description: 'Sculpted full-grain pebble leather tote featuring padded 15-inch laptop sleeve, suede microfiber lining, and key fob.',
+    subcategory: 'Leather Goods',
+    type: 'FINE LEATHER GOODS',
+    price: 239000,
+    priceUSD: 2850,
+    tagline: 'French Box Calfskin · Lambskin Nappa Lining · 24K Gold Clasp',
+    description: 'Structured evening flap bag in glazed black box calfskin. Features an architectural brushed gold push-lock clasp and convertible diamond-cut curb chain.',
+    narrative: 'Hand-assembled in Scandicci, Florence. Crafted from vegetable-tanned French box calfskin celebrated for its satiny glazed finish and enduring structure. Lined entirely in buttery Italian lambskin nappa. The dual internal compartments are secured by a custom brushed 24K gold-plated push-lock clasp, suspended from a convertible curb chain that transitions effortlessly from shoulder length to cross-body carry.',
     image: '/wardrobe/calvento-look-32.jpg',
     images: [
       '/wardrobe/calvento-look-32.jpg',
@@ -264,24 +357,33 @@ export const wardrobeProducts = [
       '/wardrobe/calvento-look-35.jpg'
     ],
     specs: [
-      ['Leather', 'Full-Grain Pebble Leather'],
-      ['Hardware', 'Matte champagne gold-plated brass'],
-      ['Capacity', 'Fits up to 15.6-inch laptop and daily folio'],
-      ['Care', 'Specialist leather balm']
+      ['Leather', '100% Full-Grain French Box Calfskin'],
+      ['Interior Lining', '100% Italian Lambskin Nappa Leather'],
+      ['Hardware', 'Solid Brass with 24K Brushed Gold Plating'],
+      ['Closure', 'Precision Push-Release Lock Mechanism with Engraved Logo'],
+      ['Strap', 'Convertible Diamond-Cut Curb Chain (28cm doubled / 52cm single)'],
+      ['Dimensions', '25 cm W x 16 cm H x 8 cm D'],
+      ['Origin', 'Handmade in Florence, Italy']
     ],
-    sizes: ['One size'],
+    sizes: ['One Size'],
     tone: 'black',
     stock: 9,
-    sku: 'CV-W-0011',
-    status: 'active'
+    status: 'active',
+    tags: ['Handmade in Florence', 'French Box Calf', 'Lambskin Lined', '24K Gold Hardware', 'Convertible Chain'],
+    pairingIds: ['cv-w-04', 'cv-w-05', 'cv-w-09']
   },
   {
     id: 'cv-w-12',
-    name: 'Sartorial Double-Faced Cashmere Wrap Scarf',
-    category: 'Accessories',
-    type: 'WINTER EDIT',
-    price: 15800,
-    description: 'Generously proportioned 200x70cm wrap scarf woven from lightweight brushed cashmere with delicate hand-twisted fringe.',
+    sku: 'CV-W-0012',
+    name: 'The Lugano Italian Goatskin Suede Zip Blouson',
+    category: 'Apparel',
+    subcategory: 'Outerwear',
+    type: 'LUXURY OUTERWEAR',
+    price: 306000,
+    priceUSD: 3650,
+    tagline: 'Velvety Italian Capra Suede · 24K Gold Ingot Chest Plaque',
+    description: 'Charcoal graphite suede zip blouson with classic point collar, chest patch pocket crested with gold CALVENTO plaque, and two-way gold zipper.',
+    narrative: 'Handcrafted in Solomeo, Italy from ultra-supple Italian goatskin suede selected for its microscopic velvety nap and cloud-soft hand. Designed with tailored shirt-jacket proportions, clean welt hip pockets, and an exterior breast pocket adorned with a hand-polished 24K gold CALVENTO ingot plaque. Fully lined in fluid silk-blend cupro with interior leather-trimmed passport pockets.',
     image: '/wardrobe/calvento-look-36.jpg',
     images: [
       '/wardrobe/calvento-look-36.jpg',
@@ -289,24 +391,33 @@ export const wardrobeProducts = [
       '/wardrobe/calvento-look-38.jpg'
     ],
     specs: [
-      ['Composition', '100% Superfine Cashmere'],
-      ['Dimensions', '200 cm x 70 cm'],
-      ['Finishing', 'Hand-twisted eyelash fringes'],
-      ['Care', 'Dry clean']
+      ['Shell', '100% Ultra-Supple Italian Goatskin Suede (Capra Velour)'],
+      ['Lining', '60% Cupro, 40% Mulberry Silk'],
+      ['Hardware', 'Custom 24K Gold-Plated Heavyweight Two-Way Zipper'],
+      ['Plaque', 'Solid Brass 24K Gold-Plated CALVENTO Pocket Ingot'],
+      ['Pockets', '1 Chest Patch Pocket, 2 Side Welt Hand Pockets, 2 Interior Pockets'],
+      ['Origin', 'Handmade in Solomeo, Italy'],
+      ['Care', 'Specialist leather & suede cleaner only']
     ],
-    sizes: ['One size'],
-    tone: 'cream',
-    stock: 15,
-    sku: 'CV-W-0012',
-    status: 'active'
+    sizes: ['IT 46 (S)', 'IT 48 (M)', 'IT 50 (L)', 'IT 52 (XL)', 'IT 54 (XXL)'],
+    tone: 'charcoal',
+    stock: 6,
+    status: 'active',
+    tags: ['Italian Suede', 'Handmade in Italy', 'Velvet Nap', 'Bespoke Metal Ingot', 'Collector\'s Blouson'],
+    pairingIds: ['cv-w-13', 'cv-w-06', 'cv-w-08']
   },
   {
     id: 'cv-w-13',
-    name: 'The Nocturne Evening Velvet Smoking Jacket',
+    sku: 'CV-W-0013',
+    name: 'The Portofino Silk-Linen Resort Bowling Shirt',
     category: 'Apparel',
-    type: 'BLACK TIE',
-    price: 44500,
-    description: 'Midnight plush cotton-silk velvet dinner jacket featuring satin shawl lapels, jetted pockets, and tailored silhouette.',
+    subcategory: 'Shirts',
+    type: 'RESORT ATELIER',
+    price: 60500,
+    priceUSD: 720,
+    tagline: 'Normandy Flax Linen & Silk · Black Silk Piping · Mother-of-Pearl',
+    description: 'Relaxed ivory camp-collar bowling shirt with jet-black silk contrast piping along lapels, front placket, and cuffs. Finished with mother-of-pearl buttons.',
+    narrative: 'An homage to mid-century Italian Riviera leisure. Woven from a slubbed blend of Normandy flax linen and mulberry silk, washed for exceptional drape and a cool, breathable hand in warm climates. Characterized by an open retro convertible camp collar, jet-black silk piped borders tracing the lapel and sleeve hems, hand-sewn Australian mother-of-pearl buttons, and tone-matched gold thread embroidery across the chest pocket.',
     image: '/wardrobe/calvento-look-39.jpg',
     images: [
       '/wardrobe/calvento-look-39.jpg',
@@ -314,15 +425,50 @@ export const wardrobeProducts = [
       '/wardrobe/calvento-look-41.jpg'
     ],
     specs: [
-      ['Shell', 'Plush Italian Cotton Velvet'],
-      ['Lapel', 'Duchess Silk Satin Shawl Collar'],
-      ['Fit', 'Tailored slim evening cut'],
-      ['Care', 'Professional velvet specialist dry clean']
+      ['Fabric', '55% Normandy Flax Linen, 45% Mulberry Silk'],
+      ['Piping', '100% Silk Charmeuse in Contrast Jet Black'],
+      ['Buttons', 'Hand-Carved Australian Iridescent Mother-of-Pearl'],
+      ['Collar', 'Convertible Notched Camp Collar with Loop Fastening'],
+      ['Embroidery', 'Tone-on-Tone Gold Satin Stitched CALVENTO Wordmark'],
+      ['Fit', 'Relaxed resort silhouette with straight vented hem'],
+      ['Care', 'Delicate cold hand wash or dry clean']
     ],
-    sizes: ['38', '40', '42', '44'],
-    tone: 'black',
-    stock: 7,
-    sku: 'CV-W-0013',
-    status: 'active'
+    sizes: ['S', 'M', 'L', 'XL'],
+    tone: 'cream',
+    stock: 20,
+    status: 'active',
+    tags: ['Normandy Linen', 'Mulberry Silk', 'Silk Piped', 'Mother-of-Pearl Buttons', 'Riviera Resortwear'],
+    pairingIds: ['cv-w-12', 'cv-w-01', 'cv-w-06']
+  },
+  {
+    id: 'cv-w-14',
+    sku: 'CV-W-0014',
+    name: 'The St. Moritz Unisex Cashmere Crewneck Sweater',
+    category: 'Apparel',
+    subcategory: 'Knitwear',
+    type: 'HERITAGE CASHMERE',
+    price: 82000,
+    priceUSD: 980,
+    tagline: '100% Mongolian Cashmere · 4-Ply Knit · Unisex Capsule',
+    description: 'Iconic ivory crewneck knit in pure Grade-A 4-ply cashmere with substantial 2x2 ribbed hems and subtle dark chest embroidery. Tailored for both women and men.',
+    narrative: 'The founding garment of CALVENTO’s quiet luxury ethos. Knitted from four-ply 100% Grade-A white cashmere gathered from the spring underfleece of Mongolian Capra hircus goats, renowned for its extraordinary loft and thermal equilibrium. Features substantial 2x2 ribbed hems, saddle shoulders for an unconstrained anatomical drape across all genders, and minimalist tonal heritage embroidery over the heart.',
+    image: '/wardrobe/calvento-look-00.jpg',
+    images: [
+      '/wardrobe/calvento-look-00.jpg'
+    ],
+    specs: [
+      ['Yarn', '100% Grade-A Mongolian Cashmere (15.2 Micron, 38mm staple)'],
+      ['Ply & Weight', '4-Ply Heavyweight Soft-Spun Knit'],
+      ['Details', 'Saddle Shoulder Raglan Sleeves, 2x2 Deep Ribbed Trims'],
+      ['Embroidery', 'High-Density Dark Obsidian CALVENTO Chest Monogram'],
+      ['Fit', 'Relaxed unisex cut; tailored proportions for men and women'],
+      ['Care', 'Specialist dry clean or hand wash with cashmere soap']
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    tone: 'cream',
+    stock: 25,
+    status: 'active',
+    tags: ['100% Mongolian Cashmere', '4-Ply Knit', 'Unisex Capsule', 'Saddle Shoulder', 'Iconic Heritage'],
+    pairingIds: ['cv-w-07', 'cv-w-03', 'cv-w-06']
   }
 ];

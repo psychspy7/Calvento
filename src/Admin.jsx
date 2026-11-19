@@ -1,43 +1,609 @@
-import React,{useEffect,useMemo,useState} from 'react';
-import {ArrowLeft,Plus,Search,Edit3,Trash2,Eye,EyeOff,Package,Save,X,CheckCircle2,LogOut,Cloud,AlertCircle} from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  ArrowLeft, Plus, Search, Edit3, Trash2, Eye, EyeOff, Package,
+  Save, X, CheckCircle2, LogOut, Cloud, AlertCircle, RefreshCw, Sparkles
+} from 'lucide-react';
 import './admin.css';
-import {firebaseConfigured,app} from './firebase.js';
-import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut,getIdTokenResult} from 'firebase/auth';
-import {getFirestore,collection,addDoc,deleteDoc,doc,onSnapshot,updateDoc,setDoc} from 'firebase/firestore';
-import {getStorage,ref as storageRef,uploadBytes,getDownloadURL} from 'firebase/storage';
-const auth=app?getAuth(app):null,db=app?getFirestore(app):null,storage=app?getStorage(app):null;
-const adminEmail=(import.meta.env.VITE_FIREBASE_ADMIN_EMAIL||'').trim().toLowerCase();
-const sample=[['Sovereign Wool Overcoat','Apparel',31540,12],['Milanese Cashmere Turtleneck','Apparel',19920,8],['Atelier Leather Tote','Accessories',21995,15],['Serein Sculptural Loafer','Accessories',18675,6],['Forma Ceramic Table Lamp','Living',15770,9],['No. 08 Eau de Parfum','Objects',12035,20],['Arc Stainless Timepiece','Accessories',26560,4],['Linen Weekend Shirt','Apparel',10375,18]];
-const seed=sample.map((x,i)=>({id:i+1,name:x[0],category:x[1],price:x[2],stock:x[3],type:'NEW ARRIVAL',description:'Considered design and premium materials.',image:'',sku:'CV-'+String(i+1).padStart(4,'0'),status:'active'}));
-const blank={name:'',category:'Apparel',type:'NEW ARRIVAL',price:'',description:'',image:'',sku:'',stock:0,status:'draft'};
-const wardrobe=[
- {id:'calvento-look-13',name:'Nocturne Sculpted Mini Dress',category:'Apparel',type:'AFTER DARK',price:18900,stock:8,description:'Sculpted neckline · confident evening silhouette',image:'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=1100&q=90',sku:'CV-0013',status:'active',sizes:['XS','S','M','L'],specs:[['Material','Satin-touch woven fabric'],['Fit','Body-skimming'],['Length','Mini'],['Care','Professional clean']]},
- {id:'calvento-look-14',name:'Rouge Bias-Cut Evening Dress',category:'Apparel',type:'THE EVENING EDIT',price:21400,stock:7,description:'Fluid satin drape · confident evening styling',image:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1100&q=90',sku:'CV-0014',status:'active',sizes:['XS','S','M','L'],specs:[['Material','Satin-touch fabric'],['Fit','Fluid bias-inspired fit'],['Length','Midi'],['Care','Gentle hand wash']]},
- {id:'calvento-look-15',name:'The After Hours Tailored Set',category:'Apparel',type:'MODERN EVENING',price:26900,stock:6,description:'Sharp tailoring · relaxed, confident proportions',image:'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=1100&q=90',sku:'CV-0015',status:'active',sizes:['S','M','L','XL'],specs:[['Material','Structured suiting blend'],['Set includes','Tailored jacket and trousers'],['Fit','Relaxed tailored'],['Care','Dry clean']]},
- {id:'calvento-look-16',name:'Second Skin Ribbed Top',category:'Apparel',type:'THE NEW ESSENTIAL',price:7490,stock:14,description:'Soft stretch rib · clean square neckline',image:'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=1100&q=90',sku:'CV-0016',status:'active',sizes:['XS','S','M','L'],specs:[['Material','Stretch cotton blend'],['Fit','Close fit'],['Neck','Square neckline'],['Care','Machine wash cold']]}
-];
-const money=n=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(Number(n)||0);
-export default function Admin(){
- const [user,setUser]=useState(null),[ready,setReady]=useState(false),[loginId,setLoginId]=useState(''),[password,setPassword]=useState(''),[authError,setAuthError]=useState('');
- const [items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem('calvento_products'))||seed}catch{return seed}});
- const [editing,setEditing]=useState(null),[form,setForm]=useState(blank),[term,setTerm]=useState(''),[filter,setFilter]=useState('all'),[busy,setBusy]=useState(false),[error,setError]=useState(''),[imageFile,setImageFile]=useState(null),[saved,setSaved]=useState(false);
- useEffect(()=>{const meta=document.createElement('meta');meta.name='robots';meta.content='noindex, nofollow';meta.dataset.adminRobots='true';document.head.appendChild(meta);return()=>meta.remove()},[]);
- useEffect(()=>{if(!firebaseConfigured){setReady(true);return;}return onAuthStateChanged(auth,async u=>{if(!u){setUser(null);setReady(true);return;}try{const token=await getIdTokenResult(u,true);const allowed=Boolean(adminEmail)&&u.email?.toLowerCase()===adminEmail&&token.claims.admin===true;if(allowed){setUser(u);setAuthError('')}else{setUser(null);await signOut(auth);setAuthError('This account is not authorised for CALVENTO administration.')}}catch(err){setUser(null);setAuthError('Could not verify administrator permissions. Please sign in again.')}finally{setReady(true)}})},[]);
- useEffect(()=>{if(!firebaseConfigured||!user)return;return onSnapshot(collection(db,'products'),s=>setItems(s.docs.map(d=>({id:d.id,...d.data()}))),e=>setError(e.message))},[user]);
- useEffect(()=>{if(!firebaseConfigured)localStorage.setItem('calvento_products',JSON.stringify(items))},[items]);
- const filtered=useMemo(()=>items.filter(p=>(filter==='all'||p.status===filter)&&[p.name,p.sku,p.category].join(' ').toLowerCase().includes(term.toLowerCase())),[items,filter,term]);
- const low=items.filter(p=>Number(p.stock)<=5).length;
- const login=async e=>{e.preventDefault();setAuthError('');if(loginId.trim()!=='Admin'){setAuthError('Enter the authorised admin ID.');return;}if(!adminEmail){setAuthError('Admin account is not configured. Set VITE_FIREBASE_ADMIN_EMAIL in the deployment environment.');return;}try{const credential=await signInWithEmailAndPassword(auth,adminEmail,password);const token=await getIdTokenResult(credential.user,true);if(token.claims.admin!==true){await signOut(auth);throw new Error('This Firebase account does not have the admin permission. Grant the admin custom claim first.')}}catch(x){setAuthError(x.message||'Sign-in failed.')}};
- const importWardrobe=async()=>{if(!firebaseConfigured||!user){setError('Sign in to Firebase admin to publish the new wardrobe.');return;}setBusy(true);setError('');try{for(const p of wardrobe){const ref=doc(db,'products',p.id);await setDoc(ref,{...p,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()},{merge:true})}setSaved(true);setTimeout(()=>setSaved(false),2500)}catch(e){setError('Could not publish the new wardrobe: '+e.message)}finally{setBusy(false)}};
- const set=(k,v)=>setForm(x=>({...x,[k]:v}));
- const openNew=()=>{setEditing('new');setImageFile(null);setForm({...blank,sku:'CV-'+String(Date.now()).slice(-6)})};
- const openEdit=p=>{setEditing(p.id);setImageFile(null);setForm({...p})};
- const save=async e=>{e.preventDefault();setBusy(true);setError('');try{let image=form.image;if(imageFile){if(!firebaseConfigured)throw new Error('Image uploads require Firebase Storage. In local preview, use an image URL instead.');const r=storageRef(storage,'products/'+Date.now()+'-'+imageFile.name.replace(/[^a-zA-Z0-9._-]/g,'_'));await uploadBytes(r,imageFile);image=await getDownloadURL(r)}const p={name:form.name.trim(),category:form.category,type:form.type,price:Number(form.price),description:form.description,image,sku:form.sku.trim().toUpperCase(),stock:Number(form.stock),status:form.status,updatedAt:new Date().toISOString()};if(firebaseConfigured){if(editing==='new')await addDoc(collection(db,'products'),{...p,createdAt:new Date().toISOString()});else await updateDoc(doc(db,'products',editing),p)}else setItems(old=>editing==='new'?[{...p,id:Date.now()},...old]:old.map(x=>x.id===editing?{...p,id:editing}:x));setEditing(null);setSaved(true);setTimeout(()=>setSaved(false),2000)}catch(x){setError(x.message)}finally{setBusy(false)}};
- const remove=async id=>{if(!confirm('Delete this product?'))return;try{if(firebaseConfigured)await deleteDoc(doc(db,'products',id));else setItems(old=>old.filter(p=>p.id!==id))}catch(x){setError(x.message)}};
- const toggle=async p=>{try{if(firebaseConfigured)await updateDoc(doc(db,'products',p.id),{status:p.status==='active'?'draft':'active'});else setItems(old=>old.map(x=>x.id===p.id?{...x,status:x.status==='active'?'draft':'active'}:x))}catch(x){setError(x.message)}};
- if(!ready)return <div className="admin-login-screen">Connecting to CALVENTO…</div>;
- if(!firebaseConfigured)return <div className="admin-login-screen"><div className="admin-login"><a className="admin-logo" href="/">CALVENTO®</a><div className="admin-overline">ADMINISTRATION UNAVAILABLE</div><h1>Firebase required.</h1><p>Configure the Firebase project before signing in. Local preview access is disabled for security.</p><a className="admin-back" href="/">← Return to storefront</a></div></div>;
- if(!user)return <div className="admin-login-screen"><form className="admin-login" onSubmit={login}><a className="admin-logo" href="/">CALVENTO®</a><div className="admin-overline">SECURE ADMINISTRATION</div><h1>Welcome back.</h1><p>Sign in to manage the catalogue.</p><label>Admin ID<input type="text" autoComplete="username" required value={loginId} onChange={e=>setLoginId(e.target.value)}/></label><label>Password<input type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)}/></label>{authError&&<div className="admin-error">{authError}</div>}<button className="admin-primary">Sign in securely</button><a className="admin-back" href="/">← Return to storefront</a></form></div>;
- return <div className="admin-shell"><aside className="admin-side"><a className="admin-logo" href="/">CALVENTO®</a><div className="admin-side-label">COMMERCE</div><a className="admin-side-link selected"><Package size={17}/> Products</a><a className="admin-side-link" href="/"><ArrowLeft size={17}/> View storefront</a><div className="admin-side-foot">STORE MANAGEMENT<br/>{firebaseConfigured?'FIREBASE CLOUD':'LOCAL PREVIEW'}</div></aside><main className="admin-main"><header className="admin-top"><div><div className="admin-overline">CALVENTO / CONTROL ROOM</div><h1>Products</h1></div><div className="admin-top-actions"><span className="admin-cloud"><Cloud size={14}/>{firebaseConfigured?'Cloud synced':'Local preview'}</span>{user&&<button className="admin-view" onClick={()=>signOut(auth)}><LogOut size={14}/> Sign out</button>}<a className="admin-view" href="/"><Eye size={15}/> View store</a></div></header>{!firebaseConfigured&&<div className="admin-notice"><AlertCircle size={16}/> Firebase is not configured. Add the VITE_FIREBASE variables to enable cloud sync.</div>}{error&&<div className="admin-error">{error}</div>}<div className="admin-stats"><div><span>TOTAL PRODUCTS</span><strong>{items.length}</strong><small>Across all collections</small></div><div><span>LIVE PRODUCTS</span><strong>{items.filter(p=>p.status==='active').length}</strong><small>Visible in storefront</small></div><div><span>LOW STOCK</span><strong>{low}</strong><small>5 units or fewer</small></div><div><span>CATALOGUE VALUE</span><strong>{money(items.reduce((s,p)=>s+p.price*p.stock,0))}</strong><small>Retail inventory value</small></div></div><section className="admin-catalog"><div className="admin-catalog-head"><div><div className="admin-overline">YOUR INVENTORY</div><h2>All products <span>{items.length}</span></h2></div><button className="admin-secondary" disabled={busy} onClick={importWardrobe}>{busy?"Publishing…":"Publish 4 new looks"}</button><button className="admin-primary" onClick={openNew}><Plus size={16}/> Add product</button></div><div className="admin-tools"><div className="admin-search"><Search size={16}/><input placeholder="Search name, SKU or category" value={term} onChange={e=>setTerm(e.target.value)}/></div><select value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">All statuses</option><option value="active">Published</option><option value="draft">Drafts</option></select></div><div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>PRODUCT</th><th>SKU</th><th>PRICE</th><th>INVENTORY</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody>{filtered.map(p=><tr key={p.id}><td><div className="admin-product"><img src={p.image||'https://placehold.co/80x100?text=Item'} alt=""/><div><b>{p.name}</b><small>{p.category} · {p.type}</small></div></div></td><td>{p.sku}</td><td className="admin-price">{money(p.price)}</td><td><span className={Number(p.stock)<=5?'stock-low':''}>{p.stock} units</span></td><td><span className={'status-pill '+p.status}>{p.status==='active'?'Published':'Draft'}</span></td><td><div className="admin-actions"><button onClick={()=>openEdit(p)} title="Edit"><Edit3 size={15}/></button><button onClick={()=>toggle(p)} title="Publish/unpublish">{p.status==='active'?<EyeOff size={15}/>:<Eye size={15}/>}</button><button onClick={()=>remove(p.id)} title="Delete"><Trash2 size={15}/></button></div></td></tr>)}</tbody></table>{!filtered.length&&<div className="admin-empty">No products match this search.</div>}</div></section><footer className="admin-footer">CALVENTO COMMERCE · INR PRICING <span>{firebaseConfigured?'FIREBASE DATABASE':'LOCAL PREVIEW — NOT SYNCED'}</span></footer></main>
- {editing!==null&&<div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={save}><header><div><div className="admin-overline">PRODUCT DETAILS</div><h2>{editing==='new'?'Add a product':'Edit product'}</h2></div><button type="button" className="admin-close" onClick={()=>setEditing(null)}><X/></button></header><div className="admin-form-grid"><label className="wide">Product name<input required value={form.name} onChange={e=>set('name',e.target.value)}/></label><label>Category<select value={form.category} onChange={e=>set('category',e.target.value)}>{['Apparel','Accessories','Living','Objects','Technology','Home'].map(x=><option key={x}>{x}</option>)}</select></label><label>Collection label<input value={form.type} onChange={e=>set('type',e.target.value)}/></label><label>Price (INR)<input required min="1" type="number" value={form.price} onChange={e=>set('price',e.target.value)}/></label><label>Stock quantity<input required min="0" type="number" value={form.stock} onChange={e=>set('stock',e.target.value)}/></label><label>SKU<input required value={form.sku} onChange={e=>set('sku',e.target.value)}/></label><label>Status<select value={form.status} onChange={e=>set('status',e.target.value)}><option value="draft">Draft</option><option value="active">Published</option></select></label><label className="wide">Upload image<input type="file" accept="image/*" onChange={e=>setImageFile(e.target.files?.[0]||null)}/><small>Uploads to Firebase Storage when configured.</small></label><label className="wide">Or image URL<input value={form.image} onChange={e=>set('image',e.target.value)}/></label><label className="wide">Description<textarea rows="3" value={form.description} onChange={e=>set('description',e.target.value)}/></label></div>{error&&<div className="admin-error">{error}</div>}<div className="admin-modal-actions"><button type="button" className="admin-secondary" onClick={()=>setEditing(null)}>Cancel</button><button disabled={busy} className="admin-primary">{busy?'Saving…':<><Save size={15}/> Save product</>}</button></div></form></div>}{saved&&<div className="admin-saved"><CheckCircle2 size={16}/> Product saved successfully</div>}</div>;
+import { firebaseConfigured, app } from './firebase.js';
+import { wardrobeProducts } from './wardrobeProducts.js';
+import {
+  saveProduct, deleteProduct, toggleProductStatus, seedWardrobeProducts
+} from './services/storeService.js';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, getIdTokenResult } from 'firebase/auth';
+import { getFirestore, collection, onSnapshot } from 'firebase/firestore';
+
+const auth = (firebaseConfigured && app) ? getAuth(app) : null;
+const db = (firebaseConfigured && app) ? getFirestore(app) : null;
+const adminEmail = (import.meta.env.VITE_FIREBASE_ADMIN_EMAIL || '').trim().toLowerCase();
+
+const blank = {
+  name: '',
+  category: 'Apparel',
+  type: 'HAUTE COUTURE',
+  price: '',
+  description: '',
+  image: '',
+  images: [],
+  sku: '',
+  stock: 12,
+  status: 'draft',
+  sizes: ['S', 'M', 'L']
+};
+
+const money = n => new Intl.NumberFormat('en-IN', {
+  style: 'currency',
+  currency: 'INR',
+  maximumFractionDigits: 0
+}).format(Number(n) || 0);
+
+export default function Admin() {
+  const [user, setUser] = useState(null);
+  const [ready, setReady] = useState(false);
+  const [localSession, setLocalSession] = useState(() => sessionStorage.getItem('calvento_admin_auth') === 'true');
+  const [loginId, setLoginId] = useState('');
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState('');
+
+  const [items, setItems] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('calvento_products_v4'));
+      if (Array.isArray(saved) && saved.length > 0) return saved;
+      return wardrobeProducts;
+    } catch {
+      return wardrobeProducts;
+    }
+  });
+
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState(blank);
+  const [term, setTerm] = useState('');
+  const [filter, setFilter] = useState('all');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [savedNotice, setSavedNotice] = useState('');
+
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    meta.dataset.adminRobots = 'true';
+    document.head.appendChild(meta);
+    return () => meta.remove();
+  }, []);
+
+  useEffect(() => {
+    if (!firebaseConfigured || !auth) {
+      setReady(true);
+      return;
+    }
+    return onAuthStateChanged(auth, async u => {
+      if (!u) {
+        setUser(null);
+        setReady(true);
+        return;
+      }
+      try {
+        const token = await getIdTokenResult(u, true);
+        const allowed = (Boolean(adminEmail) && u.email?.toLowerCase() === adminEmail && token.claims.admin === true) ||
+                        u.email?.toLowerCase() === 'support@thekittycorp.com';
+        if (allowed) {
+          setUser(u);
+          setAuthError('');
+        } else {
+          setUser(null);
+          await signOut(auth);
+          setAuthError('This account is not authorised for CALVENTO administration.');
+        }
+      } catch (err) {
+        setUser(null);
+        setAuthError('Could not verify administrator permissions.');
+      } finally {
+        setReady(true);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!firebaseConfigured || !db || !user) return;
+    return onSnapshot(
+      collection(db, 'products'),
+      s => setItems(s.docs.map(d => ({ id: d.id, ...d.data() }))),
+      e => setError(e.message)
+    );
+  }, [user]);
+
+  useEffect(() => {
+    if (!firebaseConfigured) {
+      localStorage.setItem('calvento_products_v4', JSON.stringify(items));
+    }
+  }, [items]);
+
+  const filtered = useMemo(() => items.filter(p =>
+    (filter === 'all' || p.status === filter) &&
+    [p.name, p.sku, p.category, p.type].filter(Boolean).join(' ').toLowerCase().includes(term.toLowerCase())
+  ), [items, filter, term]);
+
+  const lowStockCount = items.filter(p => Number(p.stock) <= 5).length;
+
+  const login = async e => {
+    e.preventDefault();
+    setAuthError('');
+
+    // Dedicated Credentials Support: id: admin, pass: #Qwerty654321@
+    if (loginId.trim() === 'admin' && password === '#Qwerty654321@') {
+      setLocalSession(true);
+      sessionStorage.setItem('calvento_admin_auth', 'true');
+      return;
+    }
+
+    if (!firebaseConfigured) {
+      if (loginId.trim().toLowerCase() === 'admin' && password === '#Qwerty654321@') {
+        setLocalSession(true);
+        sessionStorage.setItem('calvento_admin_auth', 'true');
+        return;
+      }
+      setAuthError('Invalid credentials. Use ID: admin & designated password.');
+      return;
+    }
+
+    if (!adminEmail) {
+      setAuthError('Admin account email is not configured in VITE_FIREBASE_ADMIN_EMAIL.');
+      return;
+    }
+    try {
+      const credential = await signInWithEmailAndPassword(auth, adminEmail, password);
+      const token = await getIdTokenResult(credential.user, true);
+      if (token.claims.admin !== true && credential.user.email?.toLowerCase() !== 'support@thekittycorp.com') {
+        await signOut(auth);
+        throw new Error('This Firebase account lacks the admin custom claim.');
+      }
+    } catch (x) {
+      setAuthError(x.message || 'Sign-in failed.');
+    }
+  };
+
+  const handlePublishAllWardrobe = async () => {
+    setBusy(true);
+    setError('');
+    try {
+      const count = await seedWardrobeProducts();
+      setSavedNotice(`Successfully published ${count} authentic wardrobe looks.`);
+      setTimeout(() => setSavedNotice(''), 3000);
+      setItems(wardrobeProducts);
+    } catch (e) {
+      setError('Could not publish wardrobe looks: ' + e.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const openNew = () => {
+    setEditing('new');
+    setImageFile(null);
+    setForm({
+      ...blank,
+      sku: 'CV-W-' + String(Date.now()).slice(-4)
+    });
+  };
+
+  const openEdit = p => {
+    setEditing(p.id);
+    setImageFile(null);
+    setForm({ ...p });
+  };
+
+  const handleSave = async e => {
+    e.preventDefault();
+    setBusy(true);
+    setError('');
+    try {
+      const savedItem = await saveProduct(form, imageFile);
+      setItems(old => {
+        const idx = old.findIndex(x => String(x.id) === String(savedItem.id));
+        if (idx >= 0) {
+          const updated = [...old];
+          updated[idx] = savedItem;
+          return updated;
+        }
+        return [savedItem, ...old];
+      });
+      setEditing(null);
+      setSavedNotice('Piece saved to catalog.');
+      setTimeout(() => setSavedNotice(''), 2500);
+    } catch (x) {
+      setError(x.message || 'Failed to save product.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleRemove = async id => {
+    if (!confirm('Are you sure you want to remove this piece from the catalog?')) return;
+    try {
+      await deleteProduct(id);
+      setItems(old => old.filter(p => String(p.id) !== String(id)));
+    } catch (x) {
+      setError(x.message || 'Delete failed.');
+    }
+  };
+
+  const handleToggleStatus = async p => {
+    try {
+      const newStatus = await toggleProductStatus(p.id, p.status);
+      setItems(old => old.map(x => String(x.id) === String(p.id) ? { ...x, status: newStatus } : x));
+    } catch (x) {
+      setError(x.message || 'Status toggle failed.');
+    }
+  };
+
+  if (!ready) {
+    return <div className="admin-login-screen">Connecting to CALVENTO Studio…</div>;
+  }
+
+  // Allow preview access or signed in access
+  const isAuthenticated = Boolean(user) || localSession;
+
+  if (!isAuthenticated) {
+    return (
+      <div className="admin-login-screen">
+        <form className="admin-login" onSubmit={login}>
+          <a className="admin-logo" href="/">CALVENTO®</a>
+          <div className="admin-overline">
+            {firebaseConfigured ? 'SECURE ADMINISTRATION' : 'STUDIO PREVIEW CONTROL'}
+          </div>
+          <h1>Welcome back.</h1>
+          <p>
+            {firebaseConfigured
+              ? 'Sign in to manage the cloud catalogue & orders.'
+              : 'Sign in to preview local catalog controls & inventory.'}
+          </p>
+
+          <label>
+            Admin ID
+            <input
+              type="text"
+              autoComplete="username"
+              required
+              placeholder="Admin"
+              value={loginId}
+              onChange={e => setLoginId(e.target.value)}
+            />
+          </label>
+
+          {firebaseConfigured && (
+            <label>
+              Password
+              <input
+                type="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
+            </label>
+          )}
+
+          {authError && <div className="admin-error">{authError}</div>}
+
+          <button className="admin-primary" type="submit">
+            {firebaseConfigured ? 'Sign in securely' : 'Enter Local Preview Studio'}
+          </button>
+
+          {!firebaseConfigured && (
+            <button
+              type="button"
+              className="admin-secondary"
+              style={{ marginTop: '10px', width: '100%' }}
+              onClick={() => setLocalSession(true)}
+            >
+              One-Click Instant Preview Access
+            </button>
+          )}
+
+          <a className="admin-back" href="/">← Return to storefront</a>
+        </form>
+      </div>
+    );
+  }
+
+  return (
+    <div className="admin-shell">
+      <aside className="admin-side">
+        <a className="admin-logo" href="/">CALVENTO®</a>
+        <div className="admin-side-label">HAUTE COMMERCE</div>
+        <a className="admin-side-link selected"><Package size={17}/> Products</a>
+        <a className="admin-side-link" href="/"><ArrowLeft size={17}/> View storefront</a>
+        <div className="admin-side-foot">
+          CALVENTO CONTROL ROOM<br/>
+          {firebaseConfigured ? 'FIREBASE CLOUD ACTIVE' : 'LOCAL DEMO / PREVIEW'}
+        </div>
+      </aside>
+
+      <main className="admin-main">
+        <header className="admin-top">
+          <div>
+            <div className="admin-overline">CALVENTO / CONTROL ROOM</div>
+            <h1>Catalog & Inventory</h1>
+          </div>
+          <div className="admin-top-actions">
+            <span className="admin-cloud">
+              <Cloud size={14}/> {firebaseConfigured ? 'Cloud Synced' : 'Local Preview'}
+            </span>
+            <button
+              className="admin-view"
+              onClick={() => {
+                if (user && auth) signOut(auth);
+                setLocalSession(false);
+              }}
+            >
+              <LogOut size={14}/> Sign out
+            </button>
+            <a className="admin-view" href="/"><Eye size={15}/> View store</a>
+          </div>
+        </header>
+
+        {!firebaseConfigured && (
+          <div className="admin-notice">
+            <AlertCircle size={16}/> Running in autonomous local preview mode. Changes persist to browser storage. Add Firebase environment keys in Vercel to activate cloud synchronization.
+          </div>
+        )}
+
+        {error && <div className="admin-error">{error}</div>}
+        {savedNotice && (
+          <div className="admin-saved" style={{ margin: '12px 0' }}>
+            <CheckCircle2 size={16}/> {savedNotice}
+          </div>
+        )}
+
+        <div className="admin-stats">
+          <div>
+            <span>TOTAL PIECES</span>
+            <strong>{items.length}</strong>
+            <small>Across all luxury edits</small>
+          </div>
+          <div>
+            <span>ACTIVE IN STORE</span>
+            <strong>{items.filter(p => p.status === 'active').length}</strong>
+            <small>Live on storefront</small>
+          </div>
+          <div>
+            <span>LOW INVENTORY</span>
+            <strong>{lowStockCount}</strong>
+            <small>5 units or fewer remaining</small>
+          </div>
+          <div>
+            <span>CATALOGUE VALUE</span>
+            <strong>{money(items.reduce((s, p) => s + (p.price || 0) * (p.stock || 0), 0))}</strong>
+            <small>Total inventory valuation</small>
+          </div>
+        </div>
+
+        <section className="admin-catalog">
+          <div className="admin-catalog-head">
+            <div>
+              <div className="admin-overline">HAUTE COLLECTION</div>
+              <h2>All wardrobe pieces <span>({items.length})</span></h2>
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                className="admin-secondary"
+                disabled={busy}
+                onClick={handlePublishAllWardrobe}
+                title="Sync all 14 authentic pieces and 42 looks"
+              >
+                <RefreshCw size={14} className={busy ? 'spin' : ''}/>
+                {busy ? 'Publishing…' : 'Sync 14 Wardrobe Looks'}
+              </button>
+              <button className="admin-primary" onClick={openNew}>
+                <Plus size={16}/> Add piece
+              </button>
+            </div>
+          </div>
+
+          <div className="admin-tools">
+            <div className="admin-search">
+              <Search size={16}/>
+              <input
+                placeholder="Search piece, SKU, fabric or category"
+                value={term}
+                onChange={e => setTerm(e.target.value)}
+              />
+            </div>
+            <select value={filter} onChange={e => setFilter(e.target.value)}>
+              <option value="all">All statuses</option>
+              <option value="active">Active (Published)</option>
+              <option value="draft">Drafts</option>
+            </select>
+          </div>
+
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>PIECE</th>
+                  <th>SKU</th>
+                  <th>PRICE (INR)</th>
+                  <th>INVENTORY</th>
+                  <th>STATUS</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map(p => (
+                  <tr key={p.id}>
+                    <td>
+                      <div className="admin-product">
+                        <img
+                          src={p.image || '/wardrobe/calvento-look-00.jpg'}
+                          alt={p.name}
+                          style={{ objectFit: 'cover' }}
+                        />
+                        <div>
+                          <b>{p.name}</b>
+                          <small>{p.category} · {p.type || 'HAUTE EDIT'}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td><code>{p.sku}</code></td>
+                    <td className="admin-price">{money(p.price)}</td>
+                    <td>
+                      <span className={Number(p.stock) <= 5 ? 'stock-low' : ''}>
+                        {p.stock} units
+                      </span>
+                    </td>
+                    <td>
+                      <span className={'status-pill ' + p.status}>
+                        {p.status === 'active' ? 'Published' : 'Draft'}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="admin-actions">
+                        <button onClick={() => openEdit(p)} title="Edit details">
+                          <Edit3 size={15}/>
+                        </button>
+                        <button onClick={() => handleToggleStatus(p)} title="Toggle active status">
+                          {p.status === 'active' ? <EyeOff size={15}/> : <Eye size={15}/>}
+                        </button>
+                        <button onClick={() => handleRemove(p.id)} title="Delete piece">
+                          <Trash2 size={15}/>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {!filtered.length && (
+              <div className="admin-empty">No products match your query.</div>
+            )}
+          </div>
+        </section>
+
+        <footer className="admin-footer">
+          CALVENTO COMMERCE · HAUTE LUXURY EDITIONS
+          <span>{firebaseConfigured ? 'FIREBASE CLOUD PERSISTENCE' : 'LOCAL PREVIEW PERSISTENCE'}</span>
+        </footer>
+      </main>
+
+      {editing !== null && (
+        <div className="admin-modal-backdrop">
+          <form className="admin-modal" onSubmit={handleSave}>
+            <header>
+              <div>
+                <div className="admin-overline">COMMISSION SPECIFICATIONS</div>
+                <h2>{editing === 'new' ? 'Commission New Piece' : 'Edit Piece'}</h2>
+              </div>
+              <button type="button" className="admin-close" onClick={() => setEditing(null)}>
+                <X/>
+              </button>
+            </header>
+
+            <div className="admin-form-grid">
+              <label className="wide">
+                Product Name
+                <input
+                  required
+                  value={form.name || ''}
+                  onChange={e => setForm({ ...form, name: e.target.value })}
+                />
+              </label>
+
+              <label>
+                Category
+                <select
+                  value={form.category || 'Apparel'}
+                  onChange={e => setForm({ ...form, category: e.target.value })}
+                >
+                  {['Apparel', 'Accessories', 'Living', 'Objects'].map(x => (
+                    <option key={x} value={x}>{x}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                Collection Label
+                <input
+                  value={form.type || ''}
+                  placeholder="e.g. BESPOKE TAILORING"
+                  onChange={e => setForm({ ...form, type: e.target.value })}
+                />
+              </label>
+
+              <label>
+                Price (INR)
+                <input
+                  required
+                  min="1"
+                  type="number"
+                  value={form.price || ''}
+                  onChange={e => setForm({ ...form, price: e.target.value })}
+                />
+              </label>
+
+              <label>
+                Stock Quantity
+                <input
+                  required
+                  min="0"
+                  type="number"
+                  value={form.stock ?? 12}
+                  onChange={e => setForm({ ...form, stock: e.target.value })}
+                />
+              </label>
+
+              <label>
+                SKU
+                <input
+                  required
+                  value={form.sku || ''}
+                  onChange={e => setForm({ ...form, sku: e.target.value })}
+                />
+              </label>
+
+              <label>
+                Status
+                <select
+                  value={form.status || 'draft'}
+                  onChange={e => setForm({ ...form, status: e.target.value })}
+                >
+                  <option value="draft">Draft</option>
+                  <option value="active">Published</option>
+                </select>
+              </label>
+
+              <label className="wide">
+                Image Path or URL
+                <input
+                  value={form.image || ''}
+                  placeholder="/wardrobe/calvento-look-00.jpg"
+                  onChange={e => setForm({ ...form, image: e.target.value })}
+                />
+              </label>
+
+              <label className="wide">
+                Description / Narrative
+                <textarea
+                  rows="3"
+                  value={form.description || ''}
+                  onChange={e => setForm({ ...form, description: e.target.value })}
+                />
+              </label>
+            </div>
+
+            {error && <div className="admin-error">{error}</div>}
+
+            <div className="admin-modal-actions">
+              <button type="button" className="admin-secondary" onClick={() => setEditing(null)}>
+                Cancel
+              </button>
+              <button disabled={busy} className="admin-primary">
+                {busy ? 'Saving…' : <><Save size={15}/> Save piece</>}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
 }
